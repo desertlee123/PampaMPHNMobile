@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import AuthInputField from "../components/AuthInputField";
 import { API_BASE_URL } from "../services/api";
+import * as LocalAuthentication from "expo-local-authentication";
 
 export default function Login({ navigation, setToken }) {
   const [email, setEmail] = useState("");
@@ -26,9 +27,16 @@ export default function Login({ navigation, setToken }) {
       console.log("Respuesta del backend (Login):", data);
 
       if (data.token) {
-        await AsyncStorage.setItem("@token", data.token);
-        await AsyncStorage.setItem("@role", data.user.role); // Guardamos el rol
-        setToken({ token: data.token, role: data.user.role }); // cambio
+        const session = {
+          token: data.token,
+          role: data.user.role,
+          email: email,
+        };
+        // Guardamos todo junto
+        await AsyncStorage.setItem("@session", JSON.stringify(session));
+        await AsyncStorage.setItem("@lastSession", JSON.stringify(session)); // Copia de respaldo para la huella
+        setToken(session);
+
       } else {
         alert("Credenciales incorrectas");
       }
@@ -40,11 +48,53 @@ export default function Login({ navigation, setToken }) {
 
   // Función que usa un token especial para entrar en modo visitante
   const handleVisitorMode = async () => {
-    await AsyncStorage.setItem("@token", "VISITOR_MODE");
-    await AsyncStorage.setItem("@role", "visitor");
-    // Al usar una cadena que no sea null, se fuerza el cambio a la pantalla Home
-    setToken('VISITOR_MODE');
+    const session = {
+      token: "VISITOR_MODE",
+      role: "visitor",
+      email: "visitante@demo",
+    };
+    await AsyncStorage.setItem("@session", JSON.stringify(session));
+    setToken(session);
   }
+
+  const handleBiometricLogin = async () => {
+    try {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      if (!compatible) {
+        alert("Tu dispositivo no soporta autenticación biométrica.");
+        return;
+      }
+
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      if (!enrolled) {
+        alert("No tenés ninguna huella registrada en el dispositivo.");
+        return;
+      }
+
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Iniciar sesión con huella digital",
+        fallbackLabel: "Usar contraseña",
+      });
+
+      if (result.success) {
+        let stored = await AsyncStorage.getItem("@session");
+        if (!stored) stored = await AsyncStorage.getItem("@lastSession"); // 👈 lee respaldo si la sesión normal fue borrada
+
+        if (stored) {
+          const session = JSON.parse(stored);
+          console.log("Inicio con huella exitoso:", session);
+          setToken(session);
+        } else {
+          alert("No hay sesión previa guardada. Iniciá sesión manualmente primero.");
+        }
+      } else {
+        alert("Autenticación cancelada o fallida.");
+      }
+    } catch (error) {
+      console.log("Error biométrico:", error);
+      alert("Ocurrió un error al usar la huella.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -88,7 +138,7 @@ export default function Login({ navigation, setToken }) {
           <View style={styles.separator} />
         </View>
 
-        <Pressable style={styles.fingerprintBtn}>
+        <Pressable style={styles.fingerprintBtn} onPress={handleBiometricLogin}>
           <MaterialIcons name="fingerprint" size={32} color="#111827" />
         </Pressable>
       </View>

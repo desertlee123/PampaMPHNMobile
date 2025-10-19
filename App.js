@@ -9,16 +9,17 @@ import Home from "./assets/src/screens/Home";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [token, setToken] = useState(null);
-  const [role, setRole] = useState(null);
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // leer sesión guardada
   const readData = async () => {
     try {
-      const val = await AsyncStorage.getItem("@token");
-      const storedRole = await AsyncStorage.getItem("@role");
-      if (val) setToken(val);
-      if (storedRole) setRole(storedRole);
+      const stored = await AsyncStorage.getItem("@session");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setSession(parsed);
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -30,33 +31,24 @@ export default function App() {
     readData();
   }, []);
 
-  // useEffect que escucha cambios de token y recargua role
-  // Esto “sincroniza” el rol cada vez que hay login o visitante
-  useEffect(() => {
-    if (token) {
-      AsyncStorage.getItem("@role").then((storedRole) => {
-        if (storedRole) setRole(storedRole);
-      });
-    }
-  }, [token]);
-
-
   if (loading) return null;
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {token ? (
+        {session ? (
           <Stack.Screen name="Home" options={{ headerShown: false }}>
-            {(props) => <Home {...props} setToken={setToken} role={role} />}
+            {(props) => (
+              <Home {...props} session={session} setSession={setSession} />
+            )}
           </Stack.Screen>
         ) : (
           <>
             <Stack.Screen name="Login" options={{ headerShown: false }}>
-              {(props) => <Login {...props} setToken={setToken} />}
+              {(props) => <Login {...props} setToken={setSession} />}
             </Stack.Screen>
             <Stack.Screen name="Signin" options={{ headerShown: false }}>
-              {(props) => <Signin {...props} setToken={setToken} />}
+              {(props) => <Signin {...props} setToken={setSession} />}
             </Stack.Screen>
           </>
         )}

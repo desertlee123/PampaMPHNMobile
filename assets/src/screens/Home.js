@@ -2,21 +2,24 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function HomeScreen({ setToken, role }) {
+export default function HomeScreen({ session, setSession }) {
   const logout = async () => {
-    await AsyncStorage.multiRemove(["@token", "@role"]);
-    setToken(null);
+    await AsyncStorage.removeItem("@session");
+    // NO borramos @lastSession, así la huella sigue funcionando
+    setSession(null);
   };
 
+  const role = session?.role;
   const isVisitor = role === "visitor" || role === "VISITOR_MODE";
   const isPartner = role === "partner";
   const isUser = role === "user";
+
+  console.log("ROL ACTUAL: ", role);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 22, marginBottom: 20 }}>
         {isVisitor && "Bienvenido visitante 🕵️"}
-        {console.log(role)}
         {isUser && "Hola usuario registrado 🏛️"}
         {isPartner && "Bienvenido socio 🤝"}
       </Text>
