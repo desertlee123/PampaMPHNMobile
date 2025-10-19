@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons } from "@expo/vector-icons";
+import AuthInputField from "../components/AuthInputField";
+import { API_BASE_URL } from "../services/api";
 
 export default function Login({ navigation, setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
     try {
-      const res = await fetch("http://192.168.0.106:8000/api/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
-      console.log("Respuesta del backend:", data);
+      console.log("Respuesta del backend (Login):", data);
+
       if (data.token) {
         await AsyncStorage.setItem("@token", data.token);
-        setToken(data.token);
+        await AsyncStorage.setItem("@role", data.user.role); // Guardamos el rol
+        setToken({ token: data.token, role: data.user.role }); // cambio
       } else {
         alert("Credenciales incorrectas");
       }
@@ -27,12 +38,20 @@ export default function Login({ navigation, setToken }) {
     }
   };
 
+  // Función que usa un token especial para entrar en modo visitante
+  const handleVisitorMode = async () => {
+    await AsyncStorage.setItem("@token", "VISITOR_MODE");
+    await AsyncStorage.setItem("@role", "visitor");
+    // Al usar una cadena que no sea null, se fuerza el cambio a la pantalla Home
+    setToken('VISITOR_MODE');
+  }
+
   return (
     <View style={styles.container}>
       {/* Logo y título */}
       <View style={styles.header}>
         <View style={styles.logoBox}>
-          <Image source={require("../../../assets/icon.png")} style={{ width: 48, height: 48 }} />
+          <MaterialIcons name="museum" size={48} color="white" />
         </View>
         <Text style={styles.title}>PAMPA MPHN</Text>
         <Text style={styles.subtitle}>Museo Provincial de Historia Nacional</Text>
@@ -40,22 +59,23 @@ export default function Login({ navigation, setToken }) {
 
       {/* Formulario */}
       <View style={styles.card}>
-        <Text style={styles.label}>Correo Electrónico</Text>
-        <TextInput
-          style={styles.input}
+        <AuthInputField
+          label="Correo Electrónico"
+          iconName="email"
           placeholder="nombre@gmail.com"
-          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
         />
 
-        <Text style={[styles.label, { marginTop: 12 }]}>Contraseña</Text>
-        <TextInput
-          style={styles.input}
+        <AuthInputField
+          label="Contraseña"
+          iconName="lock"
           placeholder="••••••••"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          style={{ marginTop: 12, marginBottom: 20 }}
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>
@@ -69,7 +89,7 @@ export default function Login({ navigation, setToken }) {
         </View>
 
         <Pressable style={styles.fingerprintBtn}>
-          <Text style={{ fontSize: 24 }}>🔒</Text>
+          <MaterialIcons name="fingerprint" size={32} color="#111827" />
         </Pressable>
       </View>
 
@@ -81,6 +101,10 @@ export default function Login({ navigation, setToken }) {
             Registrate
           </Text>
         </Text>
+        {/* NUEVO: Continuar como visitante */}
+        <Pressable style={styles.visitorButton} onPress={handleVisitorMode}>
+          <Text style={styles.visitorButtonText}>Continuar como visitante</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -113,16 +137,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 3,
   },
-  label: { color: "#111827", fontSize: 14, marginBottom: 4 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    backgroundColor: "#F9FAFB",
-  },
   button: {
     backgroundColor: "#FFA500",
     borderRadius: 10,
@@ -147,4 +161,14 @@ const styles = StyleSheet.create({
   },
   footerText: { color: "#6B7280" },
   link: { color: "#FFA500", fontWeight: "bold" },
+  // NUEVOS ESTILOS PARA EL BOTÓN DE VISITANTE
+  visitorButton: {
+    marginTop: 15,
+  },
+  visitorButtonText: {
+    textAlign: 'center',
+    color: "#6B7280",
+    fontSize: 14,
+    textDecorationLine: 'underline',
+  }
 });
