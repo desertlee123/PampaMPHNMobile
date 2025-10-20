@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import AuthInputField from "../components/AuthInputField";
 import { API_BASE_URL } from "../services/api";
+import { registerUser } from "../services/authService";
 
 export default function Signin({ navigation, setToken }) {
   const [name, setName] = useState("");
@@ -16,7 +17,7 @@ export default function Signin({ navigation, setToken }) {
       return;
     }
 
-    try {
+    /* try {
       const res = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,7 +34,7 @@ export default function Signin({ navigation, setToken }) {
       if (res.ok && data.token) {
         await AsyncStorage.setItem("@token", data.token);
         await AsyncStorage.setItem("@role", data.user.role); // Guardamos el rol
-        setToken({ token: data.token, role: data.user.role }); // 👈 cambio
+        setToken({ token: data.token, role: data.user.role }); // cambio
       } else {
         let errorMsg = "Error al registrar. Verifica tu información.";
         if (data.errors) {
@@ -49,6 +50,16 @@ export default function Signin({ navigation, setToken }) {
     } catch (e) {
       console.error(e);
       alert("Error de conexión.");
+    } */
+
+    try {
+      setLoading(true);
+      const session = await registerUser(name, email, password);
+      setToken(session);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 

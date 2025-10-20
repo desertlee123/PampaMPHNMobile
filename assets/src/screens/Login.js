@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AuthInputField from "../components/AuthInputField";
 import { API_BASE_URL } from "../services/api";
 import * as LocalAuthentication from "expo-local-authentication";
+import { loginUser } from "../services/authService";
 
 export default function Login({ navigation, setToken }) {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function Login({ navigation, setToken }) {
       return;
     }
 
-    try {
+    /* try {
       const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,6 +44,16 @@ export default function Login({ navigation, setToken }) {
     } catch (e) {
       console.log(e);
       alert("Error de conexión");
+    } */
+
+    try {
+      setLoading(true);
+      const session = await loginUser(email, password);
+      setToken(session);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,7 +89,7 @@ export default function Login({ navigation, setToken }) {
 
       if (result.success) {
         let stored = await AsyncStorage.getItem("@session");
-        if (!stored) stored = await AsyncStorage.getItem("@lastSession"); // 👈 lee respaldo si la sesión normal fue borrada
+        if (!stored) stored = await AsyncStorage.getItem("@lastSession"); // lee respaldo si la sesión normal fue borrada
 
         if (stored) {
           const session = JSON.parse(stored);
