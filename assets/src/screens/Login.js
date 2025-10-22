@@ -1,55 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet, Image } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import AuthInputField from "../components/AuthInputField";
-import { API_BASE_URL } from "../services/api";
-import * as LocalAuthentication from "expo-local-authentication";
-import { loginUser } from "../services/authService";
+import AuthHeader from "../components/AuthHeader";
+import { loginUser, biometricLogin, visitorSession } from "../services/authService";
+import { useAuth } from "../services/AuthContext"; // Importamos el hook
 
-export default function Login({ navigation, setToken }) {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
 
   const handleLogin = async () => {
     if (!email || !password) {
       alert("Por favor, completa todos los campos.");
       return;
     }
-
-    /* try {
-      const res = await fetch(`${API_BASE_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      console.log("Respuesta del backend (Login):", data);
-
-      if (data.token) {
-        const session = {
-          token: data.token,
-          role: data.user.role,
-          email: email,
-        };
-        // Guardamos todo junto
-        await AsyncStorage.setItem("@session", JSON.stringify(session));
-        await AsyncStorage.setItem("@lastSession", JSON.stringify(session)); // Copia de respaldo para la huella
-        setToken(session);
-
-      } else {
-        alert("Credenciales incorrectas");
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Error de conexión");
-    } */
-
     try {
       setLoading(true);
-      const session = await loginUser(email, password);
-      setToken(session);
+      const newSession = await loginUser(email, password);
+      setSession(newSession); // Esto hace que App.js se re-renderice a Home.
     } catch (err) {
       alert(err.message);
     } finally {
@@ -57,66 +29,28 @@ export default function Login({ navigation, setToken }) {
     }
   };
 
-  // Función que usa un token especial para entrar en modo visitante
-  const handleVisitorMode = async () => {
-    const session = {
-      token: "VISITOR_MODE",
-      role: "visitor",
-      email: "visitante@demo",
-    };
-    await AsyncStorage.setItem("@session", JSON.stringify(session));
-    setToken(session);
-  }
-
   const handleBiometricLogin = async () => {
     try {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      if (!compatible) {
-        alert("Tu dispositivo no soporta autenticación biométrica.");
-        return;
-      }
-
-      const enrolled = await LocalAuthentication.isEnrolledAsync();
-      if (!enrolled) {
-        alert("No tenés ninguna huella registrada en el dispositivo.");
-        return;
-      }
-
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Iniciar sesión con huella digital",
-        fallbackLabel: "Usar contraseña",
-      });
-
-      if (result.success) {
-        let stored = await AsyncStorage.getItem("@session");
-        if (!stored) stored = await AsyncStorage.getItem("@lastSession"); // lee respaldo si la sesión normal fue borrada
-
-        if (stored) {
-          const session = JSON.parse(stored);
-          console.log("Inicio con huella exitoso:", session);
-          setToken(session);
-        } else {
-          alert("No hay sesión previa guardada. Iniciá sesión manualmente primero.");
-        }
-      } else {
-        alert("Autenticación cancelada o fallida.");
-      }
+      setLoading(false);
+      const newSession = await biometricLogin();
+      setSession(newSession); // Huella exitosa -> a Home.
     } catch (error) {
-      console.log("Error biométrico:", error);
-      alert("Ocurrió un error al usar la huella.");
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Función que usa un token especial para entrar en modo visitante
+  const handleVisitorMode = async () => {
+    const newSession = await visitorSession();
+    setSession(newSession); // Modo visitante -> a Home.
+  }
 
   return (
     <View style={styles.container}>
       {/* Logo y título */}
-      <View style={styles.header}>
-        <View style={styles.logoBox}>
-          <MaterialIcons name="museum" size={48} color="white" />
-        </View>
-        <Text style={styles.title}>PAMPA MPHN</Text>
-        <Text style={styles.subtitle}>Museo Provincial de Historia Nacional</Text>
-      </View>
+      <AuthHeader />
 
       {/* Formulario */}
       <View style={styles.card}>
@@ -143,6 +77,12 @@ export default function Login({ navigation, setToken }) {
           <Text style={styles.buttonText}>Iniciar sesión</Text>
         </Pressable>
 
+        {loading && (
+          <View style={{ marginTop: 20 }}>
+            <ActivityIndicator size="large" color="#FFA500" />
+          </View>
+        )}
+
         <View style={styles.separatorBox}>
           <View style={styles.separator} />
           <Text style={styles.separatorText}>O continuar con</Text>
@@ -162,7 +102,6 @@ export default function Login({ navigation, setToken }) {
             Registrate
           </Text>
         </Text>
-        {/* NUEVO: Continuar como visitante */}
         <Pressable style={styles.visitorButton} onPress={handleVisitorMode}>
           <Text style={styles.visitorButtonText}>Continuar como visitante</Text>
         </Pressable>
@@ -179,15 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  header: { alignItems: "center", marginBottom: 20 },
-  logoBox: {
-    backgroundColor: "#FFA500",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  title: { fontSize: 26, fontWeight: "bold", color: "#111827" },
-  subtitle: { color: "#6B7280", marginBottom: 20 },
   card: {
     backgroundColor: "#FFFFFF",
     padding: 20,
@@ -222,7 +152,6 @@ const styles = StyleSheet.create({
   },
   footerText: { color: "#6B7280" },
   link: { color: "#FFA500", fontWeight: "bold" },
-  // NUEVOS ESTILOS PARA EL BOTÓN DE VISITANTE
   visitorButton: {
     marginTop: 15,
   },

@@ -1,48 +1,61 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import { getSession } from "../services/storage";
+import { logoutUser } from "../services/authService";
+import { useAuth } from "../services/AuthContext"; // Importamos el hook
 
-export default function HomeScreen({ session, setSession }) {
-  const logout = async () => {
-    await AsyncStorage.removeItem("@session");
-    // NO borramos @lastSession, así la huella sigue funcionando
-    setSession(null);
+export default function Home() {
+  const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
+  const [loading, setLoading] = useState(null);
+
+  const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
+
+  useEffect(() => {
+    const loadSession = async () => {
+      const stored = await getSession(); // Lee del storage, SIN props
+      setSessionInternal(stored);
+      setLoading(false);
+    };
+    loadSession();
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setSession(null); // Esto hace que App.js se re-renderice a Login
   };
 
-  const role = session?.role;
-  const isVisitor = role === "visitor" || role === "VISITOR_MODE";
-  const isPartner = role === "partner";
-  const isUser = role === "user";
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#FFA500" />
+      </View>
+    );
+  }
+
+  if (!session) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Sesión no válida. Iniciá sesión nuevamente.</Text>
+        <Pressable onPress={() => setSession(null)}>
+          <Text style={{ color: "orange", marginTop: 10 }}>Volver al login</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  const role = session.role;
 
   console.log("ROL ACTUAL: ", role);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 22, marginBottom: 20 }}>
-        {isVisitor && "Bienvenido visitante 🕵️"}
-        {isUser && "Hola usuario registrado 🏛️"}
-        {isPartner && "Bienvenido socio 🤝"}
+        {role === "visitor" && "Bienvenido visitante 🕵️"}
+        {role === "user" && "Hola usuario registrado 🏛️"}
+        {role === "partner" && "Bienvenido socio 🤝"}
       </Text>
 
-      {isVisitor && (
-        <Text style={{ color: "#6B7280", marginBottom: 20 }}>
-          Tenés acceso limitado al contenido.
-        </Text>
-      )}
-
-      {isUser && (
-        <Pressable style={{ backgroundColor: "#FFA500", padding: 12, borderRadius: 10, marginBottom: 10 }}>
-          <Text style={{ color: "white", fontWeight: "bold" }}>Ver Galería</Text>
-        </Pressable>
-      )}
-
-      {isPartner && (
-        <Pressable style={{ backgroundColor: "#4CAF50", padding: 12, borderRadius: 10, marginBottom: 10 }}>
-          <Text style={{ color: "white", fontWeight: "bold" }}>Pagar con Mercado Pago 💳</Text>
-        </Pressable>
-      )}
-
-      <Pressable onPress={logout} style={{ backgroundColor: "#6B7280", padding: 12, borderRadius: 10 }}>
+      <Pressable onPress={handleLogout} style={{ backgroundColor: "#6B7280", padding: 12, borderRadius: 10 }}>
         <Text style={{ color: "white", fontWeight: "bold" }}>Cerrar sesión</Text>
       </Pressable>
     </View>

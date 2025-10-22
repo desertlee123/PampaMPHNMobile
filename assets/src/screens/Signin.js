@@ -1,61 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaterialIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import { View, Text, Pressable, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import AuthInputField from "../components/AuthInputField";
-import { API_BASE_URL } from "../services/api";
+import AuthHeader from "../components/AuthHeader";
 import { registerUser } from "../services/authService";
+import { useAuth } from "../services/AuthContext"; // Importamos el hook
 
-export default function Signin({ navigation, setToken }) {
+export default function Signin({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
 
   const handleSignin = async () => {
     if (!name || !email || !password) {
       alert("Por favor, completa todos los campos.");
       return;
     }
-
-    /* try {
-      const res = await fetch(`${API_BASE_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password
-        }),
-      });
-
-      const data = await res.json();
-      console.log("Respuesta del backend (Registro):", data);
-
-      if (res.ok && data.token) {
-        await AsyncStorage.setItem("@token", data.token);
-        await AsyncStorage.setItem("@role", data.user.role); // Guardamos el rol
-        setToken({ token: data.token, role: data.user.role }); // cambio
-      } else {
-        let errorMsg = "Error al registrar. Verifica tu información.";
-        if (data.errors) {
-          const firstErrorKey = Object.keys(data.errors)[0];
-          if (firstErrorKey) {
-            errorMsg = data.errors[firstErrorKey][0];
-          }
-        } else if (data.message) {
-          errorMsg = data.message;
-        }
-        alert(errorMsg);
-      }
-    } catch (e) {
-      console.error(e);
-      alert("Error de conexión.");
-    } */
-
     try {
       setLoading(true);
-      const session = await registerUser(name, email, password);
-      setToken(session);
+      const newSession = await registerUser(name, email, password);
+      setSession(newSession);
     } catch (err) {
       alert(err.message);
     } finally {
@@ -66,19 +32,11 @@ export default function Signin({ navigation, setToken }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentWrapper}>
-
         {/* Logo y título */}
-        <View style={styles.header}>
-          <View style={styles.logoBox}>
-            <MaterialIcons name="museum" size={48} color="white" />
-          </View>
-          <Text style={styles.title}>PAMPA MPHN</Text>
-          <Text style={styles.subtitle}>Museo Provincial de Historia Nacional</Text>
-        </View>
+        <AuthHeader />
 
         {/* Formulario */}
         <View style={styles.card}>
-
           <AuthInputField
             label="Nombre de usuario"
             iconName="person"
@@ -109,6 +67,12 @@ export default function Signin({ navigation, setToken }) {
           <Pressable style={styles.button} onPress={handleSignin}>
             <Text style={styles.buttonText}>Registrarse</Text>
           </Pressable>
+
+          {loading && (
+            <View style={{ marginTop: 20 }}>
+              <ActivityIndicator size="large" color="#FFA500" />
+            </View>
+          )}
         </View>
 
         {/* Login Link */}
@@ -138,15 +102,6 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     alignItems: "center",
   },
-  header: { alignItems: "center", marginBottom: 20 },
-  logoBox: {
-    backgroundColor: "#FFA500",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  title: { fontSize: 26, fontWeight: "bold", color: "#111827" },
-  subtitle: { color: "#6B7280", marginBottom: 20 },
   card: {
     backgroundColor: "#FFFFFF",
     padding: 20,
