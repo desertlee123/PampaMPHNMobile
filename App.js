@@ -32,11 +32,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {token ? (
+        {/* {token ? ( */}
           <Stack.Screen name="Home" options={{ headerShown: false }}>
             {(props) => <Home {...props} setToken={setToken} />}
           </Stack.Screen>
-        ) : (
+        {/* ) : (
           <>
             <Stack.Screen name="Login" options={{ headerShown: false }}>
               {(props) => <Login {...props} setToken={setToken} />}
@@ -45,7 +45,7 @@ export default function App() {
               {(props) => <Signin {...props} setToken={setToken} />}
             </Stack.Screen>
           </>
-        )}
+        )} */}
       </Stack.Navigator>
     </NavigationContainer>
   );
