@@ -1,97 +1,125 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
+import { View, Text, Pressable, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import AuthInputField from "../components/AuthInputField";
+import AuthHeader from "../components/AuthHeader";
+import { registerUser } from "../services/authService";
+import { useAuth } from "../services/AuthContext"; // Importamos el hook
 
-export default function Signin({ navigation, setToken }) {
+export default function Signin({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
+  const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
+
+  const handleSignin = async () => {
+    if (!name || !email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
     try {
-      const res = await fetch("http://192.168.0.106:8000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-      const data = await res.json();
-      console.log("Respuesta del backend:", data);
-      if (data.token) {
-        await AsyncStorage.setItem("@token", data.token);
-        setToken(data.token);
-      } else {
-        alert("Error al registrarse");
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Error de conexión");
+      setLoading(true);
+      const newSession = await registerUser(name, email, password);
+      setSession(newSession);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Crear cuenta</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Correo"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Pressable style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Registrarse</Text>
-      </Pressable>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.contentWrapper}>
+        {/* Logo y título */}
+        <AuthHeader />
 
-      <Text style={styles.footerText}>
-        ¿Ya tenés cuenta?{" "}
-        <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
-          Iniciar sesión
-        </Text>
-      </Text>
-    </View>
+        {/* Formulario */}
+        <View style={styles.card}>
+          <AuthInputField
+            label="Nombre de usuario"
+            iconName="person"
+            placeholder="Tu nombre"
+            value={name}
+            onChangeText={setName}
+          />
+
+          <AuthInputField
+            label="Correo Electrónico"
+            iconName="email"
+            placeholder="nombre@gmail.com"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+
+          <AuthInputField
+            label="Contraseña"
+            iconName="lock"
+            placeholder="••••••••"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+            style={{ marginBottom: 20 }}
+          />
+
+          <Pressable style={styles.button} onPress={handleSignin}>
+            <Text style={styles.buttonText}>Registrarse</Text>
+          </Pressable>
+
+          {loading && (
+            <View style={{ marginTop: 20 }}>
+              <ActivityIndicator size="large" color="#FFA500" />
+            </View>
+          )}
+        </View>
+
+        {/* Login Link */}
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.footerText}>
+            ¿Ya tenés una cuenta?{" "}
+            <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
+              Iniciá sesión
+            </Text>
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#FDF2E9",
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
   },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    backgroundColor: "#F9FAFB",
-    marginBottom: 10,
+  contentWrapper: {
     width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 12,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
   },
   button: {
     backgroundColor: "#FFA500",
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
-    marginTop: 10,
-    width: "100%",
+    marginTop: 20,
   },
   buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
-  footerText: { color: "#6B7280", marginTop: 20 },
+  footerText: { color: "#6B7280" },
   link: { color: "#FFA500", fontWeight: "bold" },
 });

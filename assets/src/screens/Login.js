@@ -1,66 +1,87 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet, Image } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import AuthInputField from "../components/AuthInputField";
+import AuthHeader from "../components/AuthHeader";
+import { loginUser, biometricLogin, visitorSession } from "../services/authService";
+import { useAuth } from "../services/AuthContext"; // Importamos el hook
 
-export default function Login({ navigation, setToken }) {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
     try {
-      const res = await fetch("http://192.168.0.106:8000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      console.log("Respuesta del backend:", data);
-      if (data.token) {
-        await AsyncStorage.setItem("@token", data.token);
-        setToken(data.token);
-      } else {
-        alert("Credenciales incorrectas");
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Error de conexión");
+      setLoading(true);
+      const newSession = await loginUser(email, password);
+      setSession(newSession); // Esto hace que App.js se re-renderice a Home.
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleBiometricLogin = async () => {
+    try {
+      setLoading(false);
+      const newSession = await biometricLogin();
+      setSession(newSession); // Huella exitosa -> a Home.
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función que usa un token especial para entrar en modo visitante
+  const handleVisitorMode = async () => {
+    const newSession = await visitorSession();
+    setSession(newSession); // Modo visitante -> a Home.
+  }
 
   return (
     <View style={styles.container}>
       {/* Logo y título */}
-      <View style={styles.header}>
-        <View style={styles.logoBox}>
-          <Image source={require("../../../assets/icon.png")} style={{ width: 48, height: 48 }} />
-        </View>
-        <Text style={styles.title}>PAMPA MPHN</Text>
-        <Text style={styles.subtitle}>Museo Provincial de Historia Nacional</Text>
-      </View>
+      <AuthHeader />
 
       {/* Formulario */}
       <View style={styles.card}>
-        <Text style={styles.label}>Correo Electrónico</Text>
-        <TextInput
-          style={styles.input}
+        <AuthInputField
+          label="Correo Electrónico"
+          iconName="email"
           placeholder="nombre@gmail.com"
-          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
         />
 
-        <Text style={[styles.label, { marginTop: 12 }]}>Contraseña</Text>
-        <TextInput
-          style={styles.input}
+        <AuthInputField
+          label="Contraseña"
+          iconName="lock"
           placeholder="••••••••"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          style={{ marginTop: 12, marginBottom: 20 }}
         />
 
         <Pressable style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Iniciar sesión</Text>
         </Pressable>
+
+        {loading && (
+          <View style={{ marginTop: 20 }}>
+            <ActivityIndicator size="large" color="#FFA500" />
+          </View>
+        )}
 
         <View style={styles.separatorBox}>
           <View style={styles.separator} />
@@ -68,8 +89,8 @@ export default function Login({ navigation, setToken }) {
           <View style={styles.separator} />
         </View>
 
-        <Pressable style={styles.fingerprintBtn}>
-          <Text style={{ fontSize: 24 }}>🔒</Text>
+        <Pressable style={styles.fingerprintBtn} onPress={handleBiometricLogin}>
+          <MaterialIcons name="fingerprint" size={32} color="#111827" />
         </Pressable>
       </View>
 
@@ -81,6 +102,9 @@ export default function Login({ navigation, setToken }) {
             Registrate
           </Text>
         </Text>
+        <Pressable style={styles.visitorButton} onPress={handleVisitorMode}>
+          <Text style={styles.visitorButtonText}>Continuar como visitante</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -94,15 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  header: { alignItems: "center", marginBottom: 20 },
-  logoBox: {
-    backgroundColor: "#FFA500",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  title: { fontSize: 26, fontWeight: "bold", color: "#111827" },
-  subtitle: { color: "#6B7280", marginBottom: 20 },
   card: {
     backgroundColor: "#FFFFFF",
     padding: 20,
@@ -112,16 +127,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 3,
-  },
-  label: { color: "#111827", fontSize: 14, marginBottom: 4 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    backgroundColor: "#F9FAFB",
   },
   button: {
     backgroundColor: "#FFA500",
@@ -147,4 +152,13 @@ const styles = StyleSheet.create({
   },
   footerText: { color: "#6B7280" },
   link: { color: "#FFA500", fontWeight: "bold" },
+  visitorButton: {
+    marginTop: 15,
+  },
+  visitorButtonText: {
+    textAlign: 'center',
+    color: "#6B7280",
+    fontSize: 14,
+    textDecorationLine: 'underline',
+  }
 });
