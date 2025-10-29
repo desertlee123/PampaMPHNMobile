@@ -1,5 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { lightTheme } from '../theme/colors';
 
 const AuthInputField = ({
   label,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   label: {
-    color: "#111827",
+    color: lightTheme.text.primary,
     fontSize: 14,
     marginBottom: 4
   },
@@ -48,13 +49,13 @@ const styles = StyleSheet.create({
   },
   inputWithIcon: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: lightTheme.input.border,
     borderRadius: 10,
     paddingVertical: 10,
     paddingLeft: 40,
     paddingRight: 12,
     fontSize: 16,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: lightTheme.input.background,
   },
 });
 

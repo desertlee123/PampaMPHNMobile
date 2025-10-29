@@ -17,6 +17,7 @@ import { galeriaIcons, homeIcons, shortsIcons, buscarIcons, escanearQRIcons } fr
 import { ActivityIndicator, View } from "react-native";
 import { AuthProvider } from "./assets/src/services/AuthContext"; // Importamos el Contexto
 import { validateSession } from "./assets/src/services/authService";
+import { lightTheme } from './assets/src/theme/colors';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,7 +69,14 @@ export default function App() {
                 options={{ headerShown: false }}
               >
                 {() => (
-                  <Tab.Navigator screenOptions={{tabBarActiveTintColor: '#F97316', tabBarInactiveTintColor: '#1F2937'}}>
+                  <Tab.Navigator 
+                    screenOptions={{
+                      tabBarActiveTintColor: lightTheme.tab.active,
+                      tabBarInactiveTintColor: lightTheme.tab.inactive,
+                      tabBarStyle: {
+                        backgroundColor: lightTheme.tab.background
+                      }
+                    }}>
                     <Tab.Screen name="Home" component={Home} options={{tabBarIcon: homeIcons}}/>
                     <Tab.Screen name="Galeria" component={Galeria} options={{tabBarIcon: galeriaIcons}}/>
                     <Tab.Screen name="Shorts" component={Shorts} options={{tabBarIcon: shortsIcons}}/>

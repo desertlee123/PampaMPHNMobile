@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { lightTheme } from '../theme/colors';
 
 const AuthHeader = () => {
   return (
@@ -16,13 +17,13 @@ const AuthHeader = () => {
 const styles = StyleSheet.create({
   header: { alignItems: "center", marginBottom: 20 },
   logoBox: {
-    backgroundColor: "#FFA500",
+    backgroundColor: lightTheme.primary,
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
   },
-  title: { fontSize: 26, fontWeight: "bold", color: "#111827" },
-  subtitle: { color: "#6B7280", marginBottom: 20 },
+  title: { fontSize: 26, fontWeight: "bold", color: lightTheme.text.primary },
+  subtitle: { color: lightTheme.text.secondary, marginBottom: 20 },
 });
 
 
