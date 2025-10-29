@@ -12,6 +12,8 @@ import Shorts from "./assets/src/screens/Shorts";
 import Buscar from "./assets/src/screens/Buscar";
 import EscanearQR from "./assets/src/screens/EscanearQR";
 
+import { galeriaIcons, homeIcons, shortsIcons, buscarIcons, escanearQRIcons } from "./assets/Icons";
+
 import { ActivityIndicator, View } from "react-native";
 import { AuthProvider } from "./assets/src/services/AuthContext"; // Importamos el Contexto
 import { validateSession } from "./assets/src/services/authService";
@@ -66,12 +68,12 @@ export default function App() {
                 options={{ headerShown: false }}
               >
                 {() => (
-                  <Tab.Navigator>
-                    <Tab.Screen name="Home" component={Home} />
-                    <Tab.Screen name="Galeria" component={Galeria} />
-                    <Tab.Screen name="Shorts" component={Shorts} />
-                    <Tab.Screen name="Buscar" component={Buscar} />
-                    <Tab.Screen name="Escaner QR" component={EscanearQR} />
+                  <Tab.Navigator screenOptions={{tabBarActiveTintColor: '#F97316', tabBarInactiveTintColor: '#1F2937'}}>
+                    <Tab.Screen name="Home" component={Home} options={{tabBarIcon: homeIcons}}/>
+                    <Tab.Screen name="Galeria" component={Galeria} options={{tabBarIcon: galeriaIcons}}/>
+                    <Tab.Screen name="Shorts" component={Shorts} options={{tabBarIcon: shortsIcons}}/>
+                    <Tab.Screen name="Buscar" component={Buscar} options={{tabBarIcon: buscarIcons}}/>
+                    <Tab.Screen name="Escaner QR" component={EscanearQR} options={{tabBarIcon: escanearQRIcons}}/>
                   </Tab.Navigator>
                 )}
               </Stack.Screen>
