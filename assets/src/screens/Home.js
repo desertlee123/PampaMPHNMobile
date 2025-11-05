@@ -60,54 +60,57 @@ export default function Home() {
   console.log("ROL ACTUAL: ", role);
 
 
-  return(
-      <ScrollView style={{ flex: 1, padding: 16, backgroundColor: lightTheme.background }}>
-        <Seccion title="Categorias">
-          <Carrusel/>
-        </Seccion>
-        <Seccion title="Novedades"></Seccion>
-          <FlatList
-            data={ArticulosData}
-            renderItem={({item}) => <Box title={item.title} imageUrl={item.imageUrl}/>}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={{width: 16}}/>}
-          />
-        <Seccion title="Mas Populares"></Seccion>
-          <FlatList
-            data={ArticulosData}
-            renderItem={({item}) => <Box title={item.title} imageUrl={item.imageUrl}/>}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={{width: 16}}/>}
-          />
-        <Seccion title="Posts">
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-          <Text>Categoria 1</Text>
-          <Text>Categoria 2</Text>
-          <Text>Categoria 3</Text>
-        </Seccion>
-      </ScrollView>
+  return (
+    <ScrollView style={{ flex: 1, padding: 16, backgroundColor: lightTheme.background }}>
+      <Seccion title="Categorias">
+        <Carrusel />
+      </Seccion>
+      <Pressable onPress={handleLogout} style={{ backgroundColor: "#6B7280", padding: 12, borderRadius: 10 }}>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Cerrar sesión</Text>
+      </Pressable>
+      <Seccion title="Novedades"></Seccion>
+      <FlatList
+        data={ArticulosData}
+        renderItem={({ item }) => <Box title={item.title} imageUrl={item.imageUrl} />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+      />
+      <Seccion title="Mas Populares"></Seccion>
+      <FlatList
+        data={ArticulosData}
+        renderItem={({ item }) => <Box title={item.title} imageUrl={item.imageUrl} />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+      />
+      <Seccion title="Posts">
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+        <Text>Categoria 1</Text>
+        <Text>Categoria 2</Text>
+        <Text>Categoria 3</Text>
+      </Seccion>
+    </ScrollView>
   );
 
 

@@ -2,27 +2,27 @@ export const CarruselData = [
 
     {
         title: "Naturaleza",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Dinosaurios",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Tratados",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Retratos",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Piedras",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Fosiles",
-        imageUrl: "https://picsum.photos/300/200"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Pueblas Originarios",
