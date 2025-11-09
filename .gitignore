@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# ignoracion de las rutas de los endpoint para evitar conflictos
+assets/src/services/api.js
+assets/datos de prueba/ArticulosData.js
+assets/datos de prueba/CarruselData.js
