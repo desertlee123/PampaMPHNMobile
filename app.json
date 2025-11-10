@@ -24,6 +24,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "networkSecurityConfig": "network_security_config.xml"
+          }
+        }
+      ]
+    ]
   }
 }

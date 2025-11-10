@@ -78,7 +78,7 @@ export default function App() {
                       }
                     }}>
                     <Tab.Screen name="Home" component={Home} options={{tabBarIcon: homeIcons}}/>
-                    <Tab.Screen name="Galeria" component={Galeria} options={{tabBarIcon: galeriaIcons}}/>
+                    <Tab.Screen name="Mi Galeria" component={Galeria} options={{tabBarIcon: galeriaIcons}}/>
                     <Tab.Screen name="Shorts" component={Shorts} options={{tabBarIcon: shortsIcons}}/>
                     <Tab.Screen name="Buscar" component={Buscar} options={{tabBarIcon: buscarIcons}}/>
                     <Tab.Screen name="Escaner QR" component={EscanearQR} options={{tabBarIcon: escanearQRIcons}}/>

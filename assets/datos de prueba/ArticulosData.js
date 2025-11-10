@@ -1,7 +1,7 @@
 export const ArticulosData = [
     {
         title: "Hueso de Argentinosaurus",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
@@ -11,7 +11,7 @@ export const ArticulosData = [
     },
     {
         title: "Hornero Amarillo",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
@@ -21,7 +21,7 @@ export const ArticulosData = [
     },
     {
         title: "Fosiles de Caldenes",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
@@ -31,7 +31,7 @@ export const ArticulosData = [
     },
     {
         title: "Lanza primitiva Argentina",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
@@ -41,7 +41,7 @@ export const ArticulosData = [
     },
     {
         title: "Boleadora",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
@@ -51,7 +51,7 @@ export const ArticulosData = [
     },
     {
         title: "El ansestro del abestrus, un ave gigante!",
-        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg",
+        imageUrl: "http://localhost:8000/img/trex_principal.jpg",
         medatada: {
             fecha: "30000 AC",
             pieza: "columna bertebral"
