@@ -7,10 +7,11 @@ import { getSession } from "./assets/src/services/storage"
 import Login from "./assets/src/screens/Login";
 import Signin from "./assets/src/screens/Signin";
 import Home from "./assets/src/screens/Home";
-import Galeria from "./assets/src/screens/Galeria";
+import MiGaleria from "./assets/src/screens/MiGaleria";
 import Shorts from "./assets/src/screens/Shorts";
 import Buscar from "./assets/src/screens/Buscar";
 import EscanearQR from "./assets/src/screens/EscanearQR";
+import GaleriaAutor from "./assets/src/screens/GaleriaAutor";
 
 import { galeriaIcons, homeIcons, shortsIcons, buscarIcons, escanearQRIcons } from "./assets/Icons";
 
@@ -21,6 +22,16 @@ import { lightTheme } from './assets/src/theme/colors';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const BuscarStack = createNativeStackNavigator();
+
+function BuscarStackScreen() {
+  return (
+    <BuscarStack.Navigator screenOptions={{ headerShown: false }} >
+      <BuscarStack.Screen name="BuscarMain" component={Buscar} />
+      <BuscarStack.Screen name="GaleriaAutor" component={GaleriaAutor} />
+    </BuscarStack.Navigator>
+  );
+}
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -64,12 +75,12 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {session ? (
             <Stack.Group>
-              <Stack.Screen 
-                name="AuthenticatedStack" 
+              <Stack.Screen
+                name="AuthenticatedStack"
                 options={{ headerShown: false }}
               >
                 {() => (
-                  <Tab.Navigator 
+                  <Tab.Navigator
                     screenOptions={{
                       tabBarActiveTintColor: lightTheme.tab.active,
                       tabBarInactiveTintColor: lightTheme.tab.inactive,
@@ -77,11 +88,16 @@ export default function App() {
                         backgroundColor: lightTheme.tab.background
                       }
                     }}>
-                    <Tab.Screen name="Home" component={Home} options={{tabBarIcon: homeIcons}}/>
-                    <Tab.Screen name="Galeria" component={Galeria} options={{tabBarIcon: galeriaIcons}}/>
-                    <Tab.Screen name="Shorts" component={Shorts} options={{tabBarIcon: shortsIcons}}/>
-                    <Tab.Screen name="Buscar" component={Buscar} options={{tabBarIcon: buscarIcons}}/>
-                    <Tab.Screen name="Escaner QR" component={EscanearQR} options={{tabBarIcon: escanearQRIcons}}/>
+                    <Tab.Screen name="Home" component={Home} options={{ tabBarIcon: homeIcons }} />
+                    <Tab.Screen name="Mi galería" component={MiGaleria} options={{ tabBarIcon: galeriaIcons }} />
+                    <Tab.Screen name="Shorts" component={Shorts} options={{ tabBarIcon: shortsIcons }} />
+                    {/* <Tab.Screen name="Buscar" component={Buscar} options={{ tabBarIcon: buscarIcons }} /> */}
+                    <Tab.Screen
+                      name="Buscar"
+                      component={BuscarStackScreen}
+                      options={{ tabBarIcon: buscarIcons }}
+                    />
+                    <Tab.Screen name="Escaner QR" component={EscanearQR} options={{ tabBarIcon: escanearQRIcons }} />
                   </Tab.Navigator>
                 )}
               </Stack.Screen>

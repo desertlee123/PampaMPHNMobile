@@ -1,10 +1,32 @@
-import {Text, View, Image} from "react-native"
+import { View, Text, Image, Pressable } from "react-native"
 
-export default function Box({title, imageUrl}){
+export default function Box({ title, imageUrl, onPress, style }) {
     return (
-        <View style={{backgroundColor: "#fff", borderRadius: 16}}>
-            <Image source={{uri: imageUrl}} style={{width: 200, height: 200, borderTopLeftRadius: 16, borderTopRightRadius: 16}} />
-            <Text style={{padding: 10}}>{title}</Text>
-        </View>
+        <Pressable
+            onPress={onPress}
+            style={[ // Usamos un array para fusionar los estilos
+                {
+                    width: 160,
+                    backgroundColor: "#fff",
+                    borderRadius: 10,
+                    shadowColor: "#000",
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 3,
+                    marginBottom: 12,
+                },
+                style // Aplicamos el estilo personalizado para permitir 'flex: 1'
+            ]}
+        >
+            {imageUrl ? (
+                <Image
+                    source={{ uri: imageUrl }}
+                    style={{ width: "100%", height: 120, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+                />
+            ) : (
+                <View style={{ width: "100%", height: 120, backgroundColor: "#ccc" }} />
+            )}
+            <Text style={{ padding: 8, fontWeight: "600", textAlign: "center" }}>{title}</Text>
+        </Pressable>
     );
 }
