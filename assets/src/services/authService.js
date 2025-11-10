@@ -19,7 +19,14 @@ async function loginUser(email, password) {
     throw new Error(data.message || "Credenciales incorrectas");
   }
 
-  const session = { token: data.token, role: data.user.role, email, };
+  const session = {
+    id: data.user.id,
+    name: data.user.name,
+    email: data.user.email,
+    role: data.user.role,
+    token: data.token,
+  };
+
   await saveSession(session);
   return session;
 }
@@ -43,7 +50,14 @@ async function registerUser(name, email, password) {
     }
   }
 
-  const session = { token: data.token, role: data.user.role, email, };
+  const session = {
+    id: data.user.id,
+    name: data.user.name,
+    email: data.user.email,
+    role: data.user.role,
+    token: data.token,
+  };
+
   await saveSession(session);
   return session;
 }

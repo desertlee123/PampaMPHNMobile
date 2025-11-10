@@ -7,8 +7,6 @@ export default function GaleriaHeader({ galeria, navigation }) {
   const titulo = galeria?.titulo ? String(galeria.titulo) : "Sin título";
   const descripcion = galeria?.descripcion ? String(galeria.descripcion) : "";
 
-  console.log("GALERIA HEADER DATA:", galeria);
-
   return (
     <View>
       {/* Header */}
@@ -17,9 +15,9 @@ export default function GaleriaHeader({ galeria, navigation }) {
           flexDirection: "row",
           alignItems: "center",
           padding: 16,
-          backgroundColor: "#fff",
+          backgroundColor: lightTheme.cardBackground,
           borderBottomWidth: 1,
-          borderBottomColor: "#ddd",
+          borderBottomColor: lightTheme.border,
         }}
       >
         <Pressable onPress={() => navigation.goBack()}>
@@ -29,13 +27,13 @@ export default function GaleriaHeader({ galeria, navigation }) {
 
       {/* Info galería */}
       <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 16, fontWeight: "600", color: lightTheme.text.primary }}>
+        <Text style={{ fontSize: 16, fontFamily: lightTheme.fonts.regular, color: lightTheme.text.primary }}>
           {autor}
         </Text>
-        <Text style={{ fontSize: 28, fontWeight: "700", marginTop: 4 }}>
+        <Text style={{ fontSize: 28, fontFamily: lightTheme.fonts.bold, marginTop: 4, color: lightTheme.text.primary }}>
           {titulo}
         </Text>
-        <Text style={{ marginTop: 8, fontSize: 15, color: "#666" }}>
+        <Text style={{ marginTop: 8, fontSize: 15, color: lightTheme.text.primary, fontFamily: lightTheme.fonts.regular }}>
           {descripcion}
         </Text>
         <View style={{ height: 16 }} />
