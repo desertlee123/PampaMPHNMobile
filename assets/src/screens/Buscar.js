@@ -15,8 +15,11 @@ import Box from "../components/Box";
 import Seccion from "../components/Seccion";
 import { API_BASE_URL } from "../services/api";
 import { lightTheme } from "../theme/colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Buscar() {
+  const navigation = useNavigation();
+
   const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null); // 'YYYY-MM-DD' or null
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -292,20 +295,26 @@ export default function Buscar() {
       )}
 
       {!loading && !error && (galerias.length > 0 || articulos.length > 0) && (
-        <>
+        <View>
           {galerias.length > 0 && (
             <Seccion title="Galerías encontradas">
               <FlatList
                 data={galerias}
                 horizontal
-                renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imagen} />}
+                renderItem={({ item }) => (
+                  <Box
+                    title={item.titulo}
+                    imageUrl={item.imagen}
+                    onPress={() => navigation.navigate("GaleriaAutor", { id: item.id })}
+                  />
+                )}
                 keyExtractor={(item) => `gal-${item.id}`}
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
               />
             </Seccion>
           )}
-
+          
           {articulos.length > 0 && (
             <Seccion title="Artículos encontrados">
               <FlatList
@@ -318,7 +327,7 @@ export default function Buscar() {
               />
             </Seccion>
           )}
-        </>
+        </View>
       )}
     </ScrollView>
   );

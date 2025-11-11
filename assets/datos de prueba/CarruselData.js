@@ -2,23 +2,23 @@ export const CarruselData = [
 
     {
         title: "Naturaleza",
-        imageUrl: "https://localhost:8000/img/trex_principal.jpg"
+        imageUrl: "https://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Dinosaurios",
-        imageUrl: "http://localhost:8000/img/trex_principal.jpg"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Tratados",
-        imageUrl: "http://localhost:8000/img/trex_principal.jpg"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Retratos",
-        imageUrl: "http://localhost:8000/img/trex_principal.jpg"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal.jpg"
     },
     {
         title: "Piedras",
-        imageUrl: "http://localhost:8000/img/trex_principal_compresed.jpg"
+        imageUrl: "http://192.168.0.103:8000/img/trex_principal_compresed.jpg"
     },
     {
         title: "Fosiles",

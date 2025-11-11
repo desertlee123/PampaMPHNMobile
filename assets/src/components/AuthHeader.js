@@ -22,8 +22,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 8,
   },
-  title: { fontSize: 26, fontWeight: "bold", color: lightTheme.text.primary },
-  subtitle: { color: lightTheme.text.secondary, marginBottom: 20 },
+  title: {
+    fontSize: 26,
+    // fontWeight: "bold",
+    fontFamily: lightTheme.fonts.bold,
+    color: lightTheme.text.primary
+  },
+  subtitle: {
+    color: lightTheme.text.secondary,
+    fontFamily: lightTheme.fonts.regular,
+    marginBottom: 20
+  },
 });
 
 
