@@ -14,12 +14,15 @@ import { logoutUser } from "../services/authService";
 import { lightTheme } from "../theme/colors";
 import { API_BASE_URL } from "../services/api";
 import { useIsFocused } from "@react-navigation/native";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Perfil({ navigation }) {
   const [session, setSessionInternal] = useState(null);
   const [loading, setLoading] = useState(true);
   const { setSession } = useAuth();
   const isFocused = useIsFocused(); // detecta si la pantalla está activa
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   useEffect(() => {
     const loadSession = async () => {
@@ -92,7 +95,7 @@ export default function Perfil({ navigation }) {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color={lightTheme.primary} />
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
@@ -137,14 +140,14 @@ export default function Perfil({ navigation }) {
           style={[
             styles.iconWrapper,
             isPartner
-              ? { borderColor: lightTheme.primary }
+              ? { borderColor: theme.primary }
               : { borderColor: "#ccc" },
           ]}
         >
           <Ionicons
             name={isPartner ? "star" : "person"}
             size={80}
-            color={isPartner ? lightTheme.primary : lightTheme.text.secondary}
+            color={isPartner ? theme.primary : theme.text.secondary}
           />
           {isPartner && (
             <View style={styles.badge}>
@@ -199,19 +202,19 @@ export default function Perfil({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: lightTheme.background,
+    backgroundColor: theme.background,
     padding: 24,
   },
 
   // --- Profile Card (Logged In) ---
   profileCard: {
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: theme.cardBackground,
     borderRadius: 20,
     padding: 30,
     alignItems: "center",
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    backgroundColor: lightTheme.primary,
+    backgroundColor: theme.primary,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 15,
@@ -253,17 +256,17 @@ const styles = StyleSheet.create({
   userTitle: {
     fontSize: 30,
     fontWeight: "900", // Extra Bold
-    color: lightTheme.text.primary,
+    color: theme.text.primary,
     marginBottom: 4,
   },
   userSubtitle: {
     fontSize: 16,
-    color: lightTheme.text.secondary,
+    color: theme.text.secondary,
     marginBottom: 20,
   },
   infoText: {
     fontSize: 14,
-    color: lightTheme.text.secondary,
+    color: theme.text.secondary,
     marginTop: 10,
     textAlign: "center",
     lineHeight: 20,
@@ -288,11 +291,11 @@ const styles = StyleSheet.create({
   guestTitle: {
     fontSize: 28,
     fontWeight: "700",
-    color: lightTheme.text.primary,
+    color: theme.text.primary,
   },
   guestSubtitle: {
     fontSize: 16,
-    color: lightTheme.text.secondary,
+    color: theme.text.secondary,
     marginBottom: 30,
   },
 
@@ -309,13 +312,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: lightTheme.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 12,
     marginTop: 20,
     elevation: 5,
-    shadowColor: lightTheme.primary,
+    shadowColor: theme.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
@@ -332,11 +335,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: lightTheme.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 14,
     borderRadius: 12,
     elevation: 4,
-    shadowColor: lightTheme.primary,
+    shadowColor: theme.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,

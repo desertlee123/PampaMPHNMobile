@@ -16,6 +16,7 @@ import Seccion from "../components/Seccion";
 import { API_BASE_URL } from "../services/api";
 import { lightTheme } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Buscar() {
   const navigation = useNavigation();
@@ -28,6 +29,8 @@ export default function Buscar() {
   const [articulos, setArticulos] = useState([]);
   const [galerias, setGalerias] = useState([]);
   const [error, setError] = useState(null);
+
+  const { theme } = useTheme();
 
   const normalizeImage = (path) => {
     if (!path) return null;
@@ -175,7 +178,7 @@ export default function Buscar() {
     <ScrollView
       style={{
         flex: 1,
-        backgroundColor: lightTheme.background,
+        backgroundColor: theme.background,
         padding: 16,
       }}
     >
@@ -185,8 +188,8 @@ export default function Buscar() {
           flexDirection: "row",
           alignItems: "center",
           borderWidth: 1,
-          borderColor: lightTheme.input.border,
-          backgroundColor: lightTheme.input.background,
+          borderColor: theme.input.border,
+          backgroundColor: theme.input.background,
           borderRadius: 10,
           paddingHorizontal: 10,
           marginBottom: 12,
@@ -195,7 +198,7 @@ export default function Buscar() {
         <Ionicons
           name="search"
           size={22}
-          color={lightTheme.text.secondary}
+          color={theme.text.secondary}
           style={{ marginRight: 8 }}
         />
         <TextInput
@@ -203,10 +206,11 @@ export default function Buscar() {
           value={searchText}
           onChangeText={setSearchText}
           onSubmitEditing={handleSearch}
+          placeholderTextColor={theme.text.primary}
           style={{
             flex: 1,
             fontSize: 16,
-            color: lightTheme.text.primary,
+            color: theme.text.primary,
             paddingVertical: 10,
           }}
         />
@@ -218,7 +222,7 @@ export default function Buscar() {
           onPress={() => setShowDatePicker(true)}
           style={{
             flex: 1,
-            backgroundColor: "#f1f1f1",
+            backgroundColor: theme.border,
             padding: 10,
             borderRadius: 10,
             flexDirection: "row",
@@ -229,10 +233,10 @@ export default function Buscar() {
           <Ionicons
             name="calendar-outline"
             size={20}
-            color={lightTheme.text.secondary}
+            color={theme.text.secondary}
             style={{ marginRight: 8 }}
           />
-          <Text style={{ color: lightTheme.text.primary, fontSize: 16 }}>
+          <Text style={{ color: theme.text.primary, fontSize: 16 }}>
             {selectedDate ? `Fecha: ${selectedDate}` : "Seleccionar fecha (opcional)"}
           </Text>
         </Pressable>
@@ -244,9 +248,9 @@ export default function Buscar() {
               width: 44,
               height: 44,
               borderRadius: 10,
-              backgroundColor: "#fff",
+              backgroundColor: theme.cardBackground,
               borderWidth: 1,
-              borderColor: lightTheme.input.border,
+              borderColor: theme.input.border,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -269,7 +273,7 @@ export default function Buscar() {
       <Pressable
         onPress={handleSearch}
         style={{
-          backgroundColor: lightTheme.primary,
+          backgroundColor: theme.primary,
           padding: 12,
           borderRadius: 10,
           alignItems: "center",
@@ -279,7 +283,7 @@ export default function Buscar() {
         <Text style={{ color: "white", fontWeight: "bold" }}>Buscar</Text>
       </Pressable>
 
-      {loading && <ActivityIndicator size="large" color={lightTheme.primary} />}
+      {loading && <ActivityIndicator size="large" color={theme.primary} />}
 
       {error && (
         <Text
@@ -314,7 +318,7 @@ export default function Buscar() {
               />
             </Seccion>
           )}
-          
+
           {articulos.length > 0 && (
             <Seccion title="Artículos encontrados">
               <FlatList

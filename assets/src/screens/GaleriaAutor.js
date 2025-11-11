@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import Box from "../components/Box";
 import GaleriaHeader from "../components/buscar/GaleriaHeader";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function GaleriaAutor() {
   const navigation = useNavigation();
@@ -22,6 +23,8 @@ export default function GaleriaAutor() {
   const [galeria, setGaleria] = useState(null);
   const [articulos, setArticulos] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { theme } = useTheme();
 
   const normalizeImage = (path) => {
     if (!path) return null;
@@ -57,7 +60,7 @@ export default function GaleriaAutor() {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={lightTheme.primary} />
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
@@ -71,7 +74,7 @@ export default function GaleriaAutor() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: lightTheme.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <FlatList
         data={articulos}
         numColumns={2}

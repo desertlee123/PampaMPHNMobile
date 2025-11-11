@@ -13,11 +13,14 @@ import { lightTheme } from "../theme/colors";
 import { useAuth } from "../services/AuthContext";
 import { getSession, saveSession } from "../services/storage";
 import { API_BASE_URL } from "../services/api";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Suscripcion({ navigation }) {
   const [selectedPlan, setSelectedPlan] = useState("annual");
   const [loading, setLoading] = useState(false);
   const { setSession } = useAuth();
+  const { theme } = useTheme();
+  const currenStyles = styles(theme);
   const MP_URL = "https://mpago.la/2BkJCW8";
 
   const handleSubscribe = async () => {
@@ -58,24 +61,24 @@ export default function Suscripcion({ navigation }) {
       : "Suscribirse por $7.000 por mes";
 
   return (
-    <View style={styles.container}>
+    <View style={currenStyles.container}>
       {/* Ícono superior */}
-      <View style={styles.iconWrapper}>
+      <View style={currenStyles.iconWrapper}>
         <Ionicons name="star" size={96} color="#fff" />
       </View>
 
-      <Text style={styles.title}>Conviértete en Socio</Text>
-      <Text style={styles.subtitle}>
+      <Text style={currenStyles.title}>Conviértete en Socio</Text>
+      <Text style={currenStyles.subtitle}>
         Obtené beneficios como eventos y contenido exclusivo tanto en la App
         como en nuestro museo
       </Text>
 
       {/* Planes */}
-      <View style={styles.planContainer}>
+      <View style={currenStyles.planContainer}>
         <Pressable
           style={[
-            styles.planCard,
-            selectedPlan === "annual" && styles.selectedCard,
+            currenStyles.planCard,
+            selectedPlan === "annual" && currenStyles.selectedCard,
           ]}
           onPress={() => setSelectedPlan("annual")}
         >
@@ -87,20 +90,20 @@ export default function Suscripcion({ navigation }) {
                   : "radio-button-off"
               }
               size={22}
-              color={lightTheme.primary}
+              color={theme.primary}
             />
             <View style={{ marginLeft: 10 }}>
-              <Text style={styles.planTitle}>Anual</Text>
-              <Text style={styles.planSubtitle}>$60.000/año</Text>
+              <Text style={currenStyles.planTitle}>Anual</Text>
+              <Text style={currenStyles.planSubtitle}>$60.000/año</Text>
             </View>
           </View>
-          <Text style={styles.planPrice}>$5.000/mes</Text>
+          <Text style={currenStyles.planPrice}>$5.000/mes</Text>
         </Pressable>
 
         <Pressable
           style={[
-            styles.planCard,
-            selectedPlan === "monthly" && styles.selectedCard,
+            currenStyles.planCard,
+            selectedPlan === "monthly" && currenStyles.selectedCard,
           ]}
           onPress={() => setSelectedPlan("monthly")}
         >
@@ -112,40 +115,40 @@ export default function Suscripcion({ navigation }) {
                   : "radio-button-off"
               }
               size={22}
-              color={lightTheme.primary}
+              color={theme.primary}
             />
             <View style={{ marginLeft: 10 }}>
-              <Text style={styles.planTitle}>Mensual</Text>
+              <Text style={currenStyles.planTitle}>Mensual</Text>
             </View>
           </View>
-          <Text style={styles.planPrice}>$7.000/mes</Text>
+          <Text style={currenStyles.planPrice}>$7.000/mes</Text>
         </Pressable>
       </View>
 
       <Pressable
-        style={[styles.subscribeButton, loading && { opacity: 0.6 }]}
+        style={[currenStyles.subscribeButton, loading && { opacity: 0.6 }]}
         onPress={handleSubscribe}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.subscribeText}>{planLabel}</Text>
+          <Text style={currenStyles.subscribeText}>{planLabel}</Text>
         )}
       </Pressable>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: lightTheme.background,
+    backgroundColor: theme.background,
     padding: 20,
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: lightTheme.primary,
+    backgroundColor: theme.primary,
     width: 160,
     height: 160,
     borderRadius: 999,
@@ -156,13 +159,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: lightTheme.fonts.bold,
-    color: lightTheme.text.primary,
+    fontFamily: theme.fonts.bold,
+    color: theme.text.primary,
     marginBottom: 10,
   },
   subtitle: {
     textAlign: "center",
-    color: lightTheme.text.secondary,
+    color: theme.text.secondary,
     marginBottom: 24,
   },
   planContainer: {
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   planCard: {
-    backgroundColor: "#fff",
+    backgroundColor: theme.cardBackground,
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 12,
@@ -180,25 +183,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectedCard: {
-    borderColor: lightTheme.primary,
+    borderColor: theme.primary,
     backgroundColor: "#FFF7E6",
   },
   planTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: lightTheme.text.primary,
+    color: theme.text.primary,
   },
   planSubtitle: {
-    color: lightTheme.text.secondary,
+    color: theme.text.secondary,
     fontSize: 13,
   },
   planPrice: {
     fontWeight: "bold",
-    color: lightTheme.text.primary,
+    color: theme.text.primary,
   },
   subscribeButton: {
     marginTop: "auto",
-    backgroundColor: lightTheme.primary,
+    backgroundColor: theme.primary,
     paddingVertical: 16,
     borderRadius: 12,
     width: "100%",

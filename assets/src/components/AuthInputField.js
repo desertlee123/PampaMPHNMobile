@@ -1,6 +1,7 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { lightTheme } from '../theme/colors';
+import { useTheme } from "../theme/ThemeContext";
 
 const AuthInputField = ({
   label,
@@ -11,30 +12,35 @@ const AuthInputField = ({
   secureTextEntry = false,
   keyboardType = 'default',
   style
-}) => (
-  <View style={[styles.fieldContainer, style]}>
-    <Text style={styles.label}>{label}</Text>
-    <View style={styles.inputContainer}>
-      <MaterialIcons name={iconName} size={20} color="#6B7280" style={styles.icon} />
-      <TextInput
-        style={styles.inputWithIcon}
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-      />
-    </View>
-  </View>
-);
+}) => {
+  const theme = lightTheme;
+  const currentStyles = styles(theme);
 
-const styles = StyleSheet.create({
+  return (
+    <View style={[currentStyles.fieldContainer, style]}>
+      <Text style={currentStyles.label}>{label}</Text>
+      <View style={currentStyles.inputContainer}>
+        <MaterialIcons name={iconName} size={20} color="#6B7280" style={currentStyles.icon} />
+        <TextInput
+          style={currentStyles.inputWithIcon}
+          placeholder={placeholder}
+          placeholderTextColor="#999"
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = (theme) => StyleSheet.create({
   fieldContainer: {
     marginBottom: 12,
   },
   label: {
-    color: lightTheme.text.primary,
+    color: theme.text.primary,
     fontSize: 14,
     marginBottom: 4
   },
@@ -49,13 +55,13 @@ const styles = StyleSheet.create({
   },
   inputWithIcon: {
     borderWidth: 1,
-    borderColor: lightTheme.input.border,
+    borderColor: theme.input.border,
     borderRadius: 10,
     paddingVertical: 10,
     paddingLeft: 40,
     paddingRight: 12,
     fontSize: 16,
-    backgroundColor: lightTheme.input.background,
+    backgroundColor: theme.input.background,
   },
 });
 
