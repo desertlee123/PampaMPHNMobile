@@ -1,6 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { lightTheme } from '../theme/colors';
+import { darkTheme, lightTheme } from '../theme/colors';
 import { useTheme } from "../theme/ThemeContext";
 
 const AuthInputField = ({
@@ -13,7 +13,7 @@ const AuthInputField = ({
   keyboardType = 'default',
   style
 }) => {
-  const theme = lightTheme;
+  const {theme} = useTheme();
   const currentStyles = styles(theme);
 
   return (

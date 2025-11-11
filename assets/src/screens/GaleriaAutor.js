@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import { API_BASE_URL } from "../services/api";
 import { lightTheme } from "../theme/colors";
 import {
@@ -14,6 +14,7 @@ import {
 import Box from "../components/Box";
 import GaleriaHeader from "../components/buscar/GaleriaHeader";
 import { useTheme } from "../theme/ThemeContext";
+import { useAuth } from "../services/AuthContext";
 
 export default function GaleriaAutor() {
   const navigation = useNavigation();
@@ -25,6 +26,9 @@ export default function GaleriaAutor() {
   const [loading, setLoading] = useState(true);
 
   const { theme } = useTheme();
+
+  const { session } = useAuth();
+  const isFocussed = useIsFocused();
 
   const normalizeImage = (path) => {
     if (!path) return null;
@@ -42,11 +46,21 @@ export default function GaleriaAutor() {
 
         const artRes = await fetch(`${API_BASE_URL}/articulos/galeria/${id}`);
         const artData = await artRes.json();
+
+        const esSocio = session?.role === "partner";
+        const filtrados = Array.isArray(artData)
+          ? artData
+            .filter(a => esSocio || a.para_socios === 0)
+            .map(a => ({ ...a, imagen: normalizeImage(a.imagen) }))
+          : [];
+
         setArticulos(
           Array.isArray(artData)
             ? artData.map((a) => ({ ...a, imagen: normalizeImage(a.imagen) }))
             : []
         );
+
+        setArticulos(filtrados);
       } catch (err) {
         console.error("Error cargando galería:", err);
       } finally {
@@ -55,7 +69,7 @@ export default function GaleriaAutor() {
     }
 
     fetchData();
-  }, [id]);
+  }, [id, session, isFocussed]);
 
   if (loading) {
     return (
@@ -88,6 +102,8 @@ export default function GaleriaAutor() {
           <Box
             title={item.titulo}
             imageUrl={item.imagen}
+            paraSocios={item.para_socios}
+            esSocio={session?.role === "partner"}
             // acá aplicamos el estilo para que tome la mitad del ancho y el margen
             style={{
               flex: 1,

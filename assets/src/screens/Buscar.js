@@ -17,6 +17,9 @@ import { API_BASE_URL } from "../services/api";
 import { lightTheme } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";
+import { useAuth } from "../services/AuthContext";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect } from "react";
 
 export default function Buscar() {
   const navigation = useNavigation();
@@ -31,6 +34,10 @@ export default function Buscar() {
   const [error, setError] = useState(null);
 
   const { theme } = useTheme();
+
+  const { session } = useAuth();
+
+  const isFocussed = useIsFocused();
 
   const normalizeImage = (path) => {
     if (!path) return null;
@@ -105,7 +112,12 @@ export default function Buscar() {
           articlesMap.set(a.id, { ...a, imagen: normalizeImage(a.imagen) });
         }
       });
-      const normalizedArticulos = Array.from(articlesMap.values());
+      let normalizedArticulos = Array.from(articlesMap.values());
+
+      const esSocio = session?.role === "partner";
+      if (!esSocio) {
+        normalizedArticulos = normalizedArticulos.filter(articulo => articulo.para_socios === 0)
+      }
 
       // --- GALERÍAS ---
       // Para galerías hacemos sólo titulo y autor (categoria no aplica)
@@ -173,6 +185,12 @@ export default function Buscar() {
     setSelectedDate(null);
     setShowDatePicker(false);
   };
+
+  useEffect(() => {
+    if (isFocussed) {
+      handleSearch();
+    }
+  }, [isFocussed, session]);
 
   return (
     <ScrollView
@@ -324,7 +342,14 @@ export default function Buscar() {
               <FlatList
                 data={articulos}
                 horizontal
-                renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imagen} />}
+                renderItem={({ item }) => (
+                  <Box
+                    title={item.titulo}
+                    imageUrl={item.imagen}
+                    paraSocios={item.para_socios}
+                    esSocio={session?.role === "partner"}
+                  />
+                )}
                 keyExtractor={(item) => `art-${item.id}`}
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={() => <View style={{ width: 16 }} />}

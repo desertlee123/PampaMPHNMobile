@@ -12,32 +12,24 @@ import { ArticulosData } from "../../datos de prueba/ArticulosData";
 import { useTheme } from "../theme/ThemeContext";
 
 export default function Home() {
-  const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
-  const [loading, setLoading] = useState(null);
+  // const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
+  // const [loading, setLoading] = useState(null);
 
-  const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
+  // const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
 
-  const navigation = useNavigation();
+  const { session, setSession } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const { theme } = useTheme();
 
-  useEffect(() => {
+  /* useEffect(() => {
     const loadSession = async () => {
       const stored = await getSession(); // Lee del storage, SIN props
       setSessionInternal(stored);
       setLoading(false);
     };
     loadSession();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      setSession(null);
-    } catch (error) {
-      console.error('Error durante el logout:', error);
-    }
-  };
+  }, []); */
 
   if (loading) {
     return (

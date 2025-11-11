@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "../theme/ThemeContext";
-import { lightTheme } from "../theme/colors";
+import { lightTheme, darkTheme } from "../theme/colors";
 
 const AuthHeader = () => {
-  const theme = lightTheme;
+  const {theme} = useTheme();
   const currenStyles = styles(theme);
 
   return (

@@ -175,7 +175,7 @@ const styles = (theme) => StyleSheet.create({
   planCard: {
     backgroundColor: theme.cardBackground,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: theme.border,
     borderRadius: 12,
     padding: 16,
     flexDirection: "row",
@@ -184,7 +184,7 @@ const styles = (theme) => StyleSheet.create({
   },
   selectedCard: {
     borderColor: theme.primary,
-    backgroundColor: "#FFF7E6",
+    backgroundColor: theme.highlightBackground,
   },
   planTitle: {
     fontSize: 16,
