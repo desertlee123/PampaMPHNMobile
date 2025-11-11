@@ -5,6 +5,7 @@ import AuthInputField from "../components/AuthInputField";
 import AuthHeader from "../components/AuthHeader";
 import { loginUser, biometricLogin, visitorSession } from "../services/authService";
 import { useAuth } from "../services/AuthContext"; // Importamos el hook
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -12,6 +13,11 @@ export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
+
+  const {theme} = useTheme();
+  const styles = getStyles(theme);
+  // lightTheme
+  // darkTheme
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -90,7 +96,7 @@ export default function Login({ navigation }) {
         </View>
 
         <Pressable style={styles.fingerprintBtn} onPress={handleBiometricLogin}>
-          <MaterialIcons name="fingerprint" size={32} color="#111827" />
+          <MaterialIcons name="fingerprint" size={32} color={theme.text.primary} />
         </Pressable>
       </View>
 
@@ -110,16 +116,17 @@ export default function Login({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDF2E9",
+    //backgroundColor: "#FDF2E9",
+    backgroundColor: theme.background,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.cardBackground,
     padding: 20,
     borderRadius: 12,
     width: "100%",
@@ -145,7 +152,7 @@ const styles = StyleSheet.create({
   separatorText: { marginHorizontal: 8, color: "#6B7280" },
   fingerprintBtn: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#9999996e",
     borderRadius: 50,
     padding: 10,
     alignSelf: "center",

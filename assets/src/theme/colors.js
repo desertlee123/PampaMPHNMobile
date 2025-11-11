@@ -1,101 +1,107 @@
+// assets/src/theme/colors.js
+
 export const lightTheme = {
   // Colores primarios
-  primary: '#FFA500',
-  secondary: '#F97316',
+  primary: "#FFA500", // naranja cálido
+  secondary: "#F97316",
 
-  // Colores de fondo
-  background: '#FDF2E9',
-  cardBackground: '#FFFFFF',
+  // Fondos
+  background: "#FDF2E9", // blanco cálido
+  cardBackground: "#FFFFFF",
+  highlightBackground: "#FFF7E6",
 
-  // Colores de texto
+  // Texto
   text: {
-    primary: '#111827',
-    secondary: '#6B7280',
-    inverse: '#FFFFFF'
+    primary: "#111827",
+    secondary: "#4B5563",
+    inverse: "#FFFFFF",
   },
 
-  // Colores de estado
-  active: '#F97316',
-  inactive: '#1F2937',
+  // Borde
+  border: "#E5E7EB",
 
-  // Colores de borde
-  border: '#CCCCCC',
-
-  // Colores de elementos específicos
+  // Tabs
   tab: {
-    active: '#F97316',
-    inactive: '#1F2937',
-    background: '#FFFFFF'
+    active: "#F97316",
+    inactive: "#6B7280",
+    background: "#FFFFFF",
   },
 
-  // Colores de botones
+  // Botones
   button: {
-    primary: '#FFA500',
-    secondary: '#6B7280',
-    text: '#FFFFFF'
+    primary: "#FFA500",
+    secondary: "#6B7280",
+    text: "#FFFFFF",
   },
 
-  // Colores de input
+  // Inputs
   input: {
-    background: '#F9FAFB',
-    border: '#CCCCCC',
-    placeholder: '#999999'
+    background: "#F9FAFB",
+    border: "#D1D5DB",
+    placeholder: "#9CA3AF",
   },
 
   fonts: {
-    regular: 'Roboto_400Regular',
-    medium: 'Roboto_500Medium', // Opcional
-    bold: 'Roboto_700Bold',
+    regular: "Roboto_400Regular",
+    medium: "Roboto_500Medium",
+    bold: "Roboto_700Bold",
   },
+
+  // Huella dactilar ícono
+  huella: "#9999996e",
 };
 
 export const darkTheme = {
-  // Colores primarios
-  primary: '#FF8C00',
-  secondary: '#F97316',
+  // Colores principales (tonos cálidos y dorados)
+  primary: "#FFB547", // dorado vibrante
+  secondary: "#F97316",
 
-  // Colores de fondo
-  background: '#1A1A1A',
-  cardBackground: '#2D2D2D',
+  // Fondos
+  background: "#121212", // gris carbón real
+  cardBackground: "#1E1E1E", // gris profundo elegante
+  highlightBackground: "#332805",
 
-  // Colores de texto
+  // Texto
   text: {
-    primary: '#FFFFFF',
-    secondary: '#9CA3AF',
-    inverse: '#111827'
+    primary: "#F5F5F5", // casi blanco
+    secondary: "#C0C0C0", // gris claro
+    inverse: "#111827",
   },
 
-  // Colores de estado
-  active: '#F97316',
-  inactive: '#9CA3AF',
+  // Bordes
+  border: "#2A2A2A",
 
-  // Colores de borde
-  border: '#404040',
-
-  // Colores de elementos específicos
+  // Tabs
   tab: {
-    active: '#F97316',
-    inactive: '#9CA3AF',
-    background: '#1A1A1A'
+    active: "#FFB547",
+    inactive: "#6B6B6B",
+    background: "#181818",
   },
 
-  // Colores de botones
+  // Botones
   button: {
-    primary: '#FF8C00',
-    secondary: '#4B5563',
-    text: '#FFFFFF'
+    primary: "#FFB547", // mantiene la identidad
+    secondary: "#2E2E2E",
+    text: "#FFFFFF",
   },
 
-  // Colores de input
+  // Inputs
   input: {
-    background: '#2D2D2D',
-    border: '#404040',
-    placeholder: '#6B7280'
+    background: "#2A2A2A",
+    border: "#3A3A3A",
+    placeholder: "#A1A1A1",
   },
+
+  // Pequeñas sombras y brillos
+  shadow: "rgba(0,0,0,0.4)",
+  overlay: "rgba(255,255,255,0.05)",
 
   fonts: {
-    regular: 'Roboto_400Regular',
-    medium: 'Roboto_500Medium',
-    bold: 'Roboto_700Bold',
+    regular: "Roboto_400Regular",
+    medium: "Roboto_500Medium",
+    bold: "Roboto_700Bold",
   },
+
+  // Huella dactilar ícono
+  huella: "#0c06066e",
 };

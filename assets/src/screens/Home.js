@@ -9,32 +9,27 @@ import { lightTheme } from '../theme/colors';
 import Carrusel from "../components/carrusel/Carrusel";
 import Box from "../components/Box";
 import { ArticulosData } from "../../datos de prueba/ArticulosData";
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Home() {
-  const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
-  const [loading, setLoading] = useState(null);
+  // const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
+  // const [loading, setLoading] = useState(null);
 
-  const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
+  // const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
 
-  const navigation = useNavigation();
+  const { session, setSession } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const { theme } = useTheme();
+
+  /* useEffect(() => {
     const loadSession = async () => {
       const stored = await getSession(); // Lee del storage, SIN props
       setSessionInternal(stored);
       setLoading(false);
     };
     loadSession();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      setSession(null);
-    } catch (error) {
-      console.error('Error durante el logout:', error);
-    }
-  };
+  }, []); */
 
   if (loading) {
     return (
@@ -61,13 +56,10 @@ export default function Home() {
 
 
   return (
-    <ScrollView style={{ flex: 1, padding: 16, backgroundColor: lightTheme.background }}>
+    <ScrollView style={{ flex: 1, padding: 16, backgroundColor: theme.background }}>
       <Seccion title="Categorias">
         <Carrusel />
       </Seccion>
-      <Pressable onPress={handleLogout} style={{ backgroundColor: "#6B7280", padding: 12, borderRadius: 10 }}>
-        <Text style={{ color: "white", fontWeight: "bold" }}>Cerrar sesión</Text>
-      </Pressable>
       <Seccion title="Novedades"></Seccion>
       <FlatList
         data={ArticulosData}

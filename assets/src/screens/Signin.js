@@ -4,6 +4,7 @@ import AuthInputField from "../components/AuthInputField";
 import AuthHeader from "../components/AuthHeader";
 import { registerUser } from "../services/authService";
 import { useAuth } from "../services/AuthContext"; // Importamos el hook
+import { useTheme } from "../theme/ThemeContext";
 
 export default function Signin({ navigation }) {
   const [name, setName] = useState("");
@@ -12,6 +13,9 @@ export default function Signin({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const { setSession } = useAuth(); // Usamos el hook para acceder a setSession
+
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const handleSignin = async () => {
     if (!name || !email || !password) {
@@ -89,10 +93,10 @@ export default function Signin({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#FDF2E9",
+    backgroundColor: theme.background,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.cardBackground,
     padding: 20,
     borderRadius: 12,
     width: "100%",
