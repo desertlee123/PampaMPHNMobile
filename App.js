@@ -23,6 +23,7 @@ import Buscar from "./assets/src/screens/Buscar";
 import EscanearQR from "./assets/src/screens/EscanearQR";
 import GaleriaAutor from "./assets/src/screens/GaleriaAutor";
 import Perfil from "./assets/src/screens/Perfil";
+import Notificaciones from "./assets/src/screens/Notificaciones";
 
 import {
   galeriaIcons,
@@ -36,7 +37,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const BuscarStack = createNativeStackNavigator();
 
-// 🔹 Header con los tres íconos
+// Header con los tres íconos
 function HeaderRightIcons() {
   const navigation = useNavigation();
   return (
@@ -48,7 +49,7 @@ function HeaderRightIcons() {
         marginRight: 10,
       }}
     >
-      <Pressable onPress={() => console.log("Notificaciones")}>
+      <Pressable onPress={() => navigation.navigate("Notificaciones")}>
         <Ionicons
           name="notifications-outline"
           size={24}
@@ -185,6 +186,36 @@ export default function App() {
                 options={{
                   headerShown: true,
                   title: "Mi Perfil",
+                  headerTitleStyle: {
+                    fontFamily: lightTheme.fonts.bold,
+                    fontSize: 20,
+                    color: lightTheme.text.primary,
+                  },
+                  headerStyle: { backgroundColor: lightTheme.cardBackground },
+                }}
+              />
+
+              <Stack.Screen
+                name="Notificaciones"
+                component={Notificaciones}
+                options={{
+                  headerShown: true,
+                  title: "Notificaciones",
+                  headerTitleStyle: {
+                    fontFamily: lightTheme.fonts.bold,
+                    fontSize: 20,
+                    color: lightTheme.text.primary,
+                  },
+                  headerStyle: { backgroundColor: lightTheme.cardBackground },
+                }}
+              />
+
+              <Stack.Screen
+                name="Suscripcion"
+                component={require("./assets/src/screens/Suscripcion").default}
+                options={{
+                  headerShown: true,
+                  title: "Suscripción",
                   headerTitleStyle: {
                     fontFamily: lightTheme.fonts.bold,
                     fontSize: 20,
