@@ -32,7 +32,7 @@ export default function Box({ title, imageUrl, onPress, style, paraSocios, esSoc
             )}
 
             {/* ⭐ Solo mostrar a socios, en artículos exclusivos */}
-            {esSocio && paraSocios === 1 && (
+            {/*esSocio && */paraSocios === 1 && (
                 <View
                     style={{
                         position: "absolute",

@@ -13,7 +13,7 @@ import { ThemeProvider, useTheme } from "./assets/src/theme/ThemeContext";
 
 import Login from "./assets/src/screens/Login";
 import Signin from "./assets/src/screens/Signin";
-import Home from "./assets/src/screens/Home";
+import HomeNavegation from "./assets/src/screens/HomeNavegation";
 import MiGaleria from "./assets/src/screens/MiGaleria";
 import Shorts from "./assets/src/screens/Shorts";
 import Buscar from "./assets/src/screens/Buscar";
@@ -77,7 +77,7 @@ function MainTabs() {
         tabBarStyle: { backgroundColor: theme.tab.background, borderTopColor: theme.border },
       }}
     >
-      <Tab.Screen name="Home" component={Home} options={{ tabBarIcon: homeIcons }} />
+      <Tab.Screen name="Home" component={HomeNavegation} options={{ tabBarIcon: homeIcons }} />
       <Tab.Screen name="Mi galería" component={MiGaleria} options={{ tabBarIcon: galeriaIcons }} />
       <Tab.Screen name="Shorts" component={Shorts} options={{ tabBarIcon: shortsIcons }} />
       <Tab.Screen name="Buscar" component={BuscarStackScreen} options={{ tabBarIcon: buscarIcons }} />

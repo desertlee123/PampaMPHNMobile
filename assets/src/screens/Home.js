@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { View, Text, Pressable, ActivityIndicator, ScrollView, FlatList } from "react-native";
 import { getSession } from "../services/storage";
 import { logoutUser } from "../services/authService";
@@ -10,6 +10,7 @@ import Carrusel from "../components/carrusel/Carrusel";
 import Box from "../components/Box";
 import { ArticulosData } from "../../datos de prueba/ArticulosData";
 import { useTheme } from "../theme/ThemeContext";
+import { getAllArticulos, getLastArticulos, getAllCategorias } from "../services/api";
 
 export default function Home() {
   // const [session, setSessionInternal] = useState(null); // Estado interno para la sesión
@@ -17,11 +18,18 @@ export default function Home() {
 
   // const { setSession } = useAuth(); // Usamos el hook para el setter global (solo para Logout)
 
+  const navigator = useNavigation();
+
   const { session, setSession } = useAuth();
-  const [loading, setLoading] = useState(false);
-
-  const { theme } = useTheme();
-
+  const [dataElements, setDataElements] = useState(
+    {
+      loading: true,
+      articulos: [],
+      articulosRecientes: [],
+      categorias: [],
+    }
+  );
+  
   /* useEffect(() => {
     const loadSession = async () => {
       const stored = await getSession(); // Lee del storage, SIN props
@@ -31,7 +39,30 @@ export default function Home() {
     loadSession();
   }, []); */
 
-  if (loading) {
+  useEffect(() => {
+    cargarElementos().then((data) => {
+      const {
+        articulos,
+        articulosRecientes,
+        categorias,
+      } = data;
+      
+      setDataElements(
+        {
+          loading: false,
+          articulos,
+          articulosRecientes,
+          categorias,
+        }
+      );
+    }).catch((error) => {
+      console.log("Error al cargar los artículos: ", error);
+    });
+  }, []);
+
+  const { theme } = useTheme();
+
+  if (dataElements.loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#FFA500" />
@@ -56,72 +87,49 @@ export default function Home() {
 
 
   return (
-    <ScrollView style={{ flex: 1, padding: 16, backgroundColor: theme.background }}>
-      <Seccion title="Categorias">
-        <Carrusel />
-      </Seccion>
-      <Seccion title="Novedades"></Seccion>
-      <FlatList
-        data={ArticulosData}
-        renderItem={({ item }) => <Box title={item.title} imageUrl={item.imageUrl} />}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
-      />
-      <Seccion title="Mas Populares"></Seccion>
-      <FlatList
-        data={ArticulosData}
-        renderItem={({ item }) => <Box title={item.title} imageUrl={item.imageUrl} />}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
-      />
-      <Seccion title="Posts">
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-        <Text>Categoria 1</Text>
-        <Text>Categoria 2</Text>
-        <Text>Categoria 3</Text>
-      </Seccion>
-    </ScrollView>
+    <FlatList style={{ flex: 1, padding: 16, backgroundColor: theme.background }}
+      ListHeaderComponent={
+      <>
+        <Seccion title="Categorias">
+          <Carrusel data={dataElements.categorias}/>
+        </Seccion>
+        <Seccion title="Novedades"></Seccion>
+        <FlatList
+          data={dataElements.articulosRecientes}
+          renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo")}/>}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+        />
+        {/* <Seccion title="Mas Populares"></Seccion>
+        <FlatList
+          data={ArticulosData}
+          renderItem={({ item }) => <Box title={item.title} imageUrl={item.imageUrl} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+        /> */}
+        <Seccion title="Articulos"></Seccion>
+      </>
+      }
+      data={dataElements.articulos}
+      renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo")}/>}  
+      showsHorizontalScrollIndicator={false}
+      ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+      columnWrapperStyle={{ justifyContent: 'space-around', marginBottom: 16 }}
+      numColumns={2}
+    />
   );
+}
 
+async function cargarElementos() {
+  const articulos = await getAllArticulos();
+  const articulosRecientes = await getLastArticulos();
+  const categorias = await getAllCategorias();
 
-  // return (
-  //   <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //     <Text style={{ fontSize: 22, marginBottom: 20 }}>
-  //       {role === "visitor" && "Bienvenido visitante 🕵️"}
-  //       {role === "user" && "Hola usuario registrado 🏛️"}
-  //       {role === "partner" && "Bienvenido socio 🤝"}
-  //     </Text>
-
-  //     <Pressable onPress={handleLogout} style={{ backgroundColor: "#6B7280", padding: 12, borderRadius: 10 }}>
-  //       <Text style={{ color: "white", fontWeight: "bold" }}>Cerrar sesión</Text>
-  //     </Pressable>
-
-  //     <Pressable onPress={() => navigation.navigate("Galeria")} style={{ backgroundColor: "#6B72D0", padding: 12, borderRadius: 10, marginTop: 10 }}>
-  //       <Text style={{ color: "white", fontWeight: "bold" }}>Ir a Galería</Text>
-  //     </Pressable>
-
-  //   </View>
-  // );
+  return {
+    articulos,
+    articulosRecientes,
+    categorias,
+  };
 }

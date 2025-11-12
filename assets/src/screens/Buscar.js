@@ -43,7 +43,7 @@ export default function Buscar() {
     if (!path) return null;
     if (path.startsWith("http")) return path;
     const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    return `${API_BASE_URL.replace("/api", "")}/${cleanPath}`;
+    return `${API_BASE_URL.replace("/api", "/img")}/${cleanPath}`;
   };
 
   // evita problemas con timezone: construimos yyyy-mm-dd manualmente
