@@ -96,7 +96,7 @@ export default function Home() {
         <Seccion title="Novedades"></Seccion>
         <FlatList
           data={dataElements.articulosRecientes}
-          renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo")}/>}
+          renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo", {id: item.id})}/>}
           horizontal
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
@@ -113,7 +113,7 @@ export default function Home() {
       </>
       }
       data={dataElements.articulos}
-      renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo")}/>}  
+      renderItem={({ item }) => <Box title={item.titulo} imageUrl={item.imageUrl} paraSocios={item.para_socios} onPress={() => navigator.navigate("Articulo", {id: item.id})}/>}  
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
       columnWrapperStyle={{ justifyContent: 'space-around', marginBottom: 16 }}

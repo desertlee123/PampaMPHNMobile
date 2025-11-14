@@ -121,9 +121,12 @@ export async function getAllCategorias(){
     }
 }
 
-export async function getSaveArticulos(){
+export async function getArticuloPorId(id){
+    const url = `${API_BASE_URL}/articulos/${id}`;
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/articulos/recientes`);
+        console.log("id {}",id);
+        const response = await fetch(url);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -133,30 +136,83 @@ export async function getSaveArticulos(){
         
         const jsonData = await response.json();
 
-        if (!jsonData || !Array.isArray(jsonData)) {
+        if (!jsonData) {
             throw new Error('Estructura de respuesta inválida: esperaba jsonData como array');
         }
 
-        return jsonData.map((item) => {
-            const {
-                id,
-                titulo,
-                imagen,
-                para_socios,
-            } = item;
+        const {
+            id,
+            autor,
+            titulo,
+            imagen,
+            descripcion,
+            fecha_publicacion,
+            metadatos,
+            para_socios,
+        } = jsonData;
 
-            const img = imagen ? `${IMAGE_BASE_URL}/${imagen}` : null;
+        const img = imagen ? `${IMAGE_BASE_URL}/${imagen}` : null;
 
-            return {
-                id,
-                titulo,
-                imageUrl: img,
-                para_socios,
-            };
-
-        });
+        return {
+            id,
+            autor,
+            titulo,
+            descripcion,
+            fecha_publicacion,
+            imageUrl: img,
+            metadatos,
+            para_socios,
+        };
     } catch (error) {
         console.error('Error al obtener artículos:', error);
         throw error;
+    }
+}
+
+export async function saveArticulo(idArticulo, session) {
+    console.log('id articulo', idArticulo);
+    console.log('role', session.role);
+    console.log('token', session.token);
+    
+    if (session.role === 'visitor'){
+        alert("Debes registrarse para guardar artículos");
+        return;
+    }
+
+    if (!session.token) {
+        alert("Token no disponible. Por favor, vuelve a iniciar sesión.");
+        console.error('Token no disponible:', session);
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/articulos/guardar`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.token}`,
+            },
+            body: JSON.stringify({
+                id_articulo: idArticulo,
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error response:', response.status, errorData);
+            alert(`No se pudo guardar el artículo: ${response.status} ${errorData.message || ''}`);
+            return;
+        }
+
+        const data = await response.json();
+        console.log('Artículo guardado exitosamente:', data);
+        alert("Artículo guardado exitosamente");
+        return data;
+
+    } catch (error) {
+        console.error('Error al guardar artículo:', error);
+        alert(`Error: ${error.message}`);
+        return null;
     }
 }

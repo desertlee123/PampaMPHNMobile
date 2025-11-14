@@ -10,6 +10,7 @@ import { AuthProvider } from "./assets/src/services/AuthContext";
 import { getSession } from "./assets/src/services/storage";
 import { validateSession } from "./assets/src/services/authService";
 import { ThemeProvider, useTheme } from "./assets/src/theme/ThemeContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Login from "./assets/src/screens/Login";
 import Signin from "./assets/src/screens/Signin";
@@ -183,7 +184,9 @@ export default function App() {
   return (
     <AuthProvider setSession={setSession}>
       <ThemeProvider>
-        <AppNavigator session={session} setSession={setSession} />
+        <GestureHandlerRootView>
+          <AppNavigator session={session} setSession={setSession} />
+        </GestureHandlerRootView>
       </ThemeProvider>
     </AuthProvider>
   );
