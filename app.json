@@ -33,7 +33,9 @@
             "networkSecurityConfig": "network_security_config.xml"
           }
         }
-      ]
+      ],
+      "expo-barcode-scanner",
+      "expo-video"
     ]
   }
 }

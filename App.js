@@ -1,3 +1,4 @@
+// App.js
 import { useEffect, useState } from "react";
 import { NavigationContainer, DefaultTheme, DarkTheme, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -138,6 +139,15 @@ function AppNavigator({ session, setSession }) {
                 title: "Suscripción",
                 headerTitleStyle: { color: theme.text.primary, fontFamily: theme.fonts.bold },
                 headerStyle: { backgroundColor: theme.cardBackground },
+              }}
+            />
+            {/* PROVISORIO POR AHORA, PARA HACER LO DE ESCANEAR QR, NECESITO UNA PANTALLA DE ARTÍCULO DE PRUEBA */}
+            <Stack.Screen
+              name="ArticuloAutorProvisorio"
+              component={require("./assets/src/screens/ArticuloAutorProvisorio").default}
+              options={{
+                headerShown: true,
+                title: "Artículo"
               }}
             />
           </Stack.Group>
