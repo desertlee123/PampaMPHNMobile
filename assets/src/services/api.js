@@ -1,16 +1,17 @@
-export const API_BASE_URL = "http://192.168.0.106:8000/api";
-export const IMAGE_BASE_URL = "http://192.168.0.106:8000/img";
+// assets/src/services/api.js
+export const API_BASE_URL = "http://192.168.0.103:8000/api";
+export const IMAGE_BASE_URL = "http://192.168.0.103:8000/img";
 
-export async function getAllArticulos(){
+export async function getAllArticulos() {
     try {
         const response = await fetch(`${API_BASE_URL}/articulos`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData || !Array.isArray(jsonData)) {
@@ -41,16 +42,16 @@ export async function getAllArticulos(){
     }
 }
 
-export async function getLastArticulos(){
+export async function getLastArticulos() {
     try {
         const response = await fetch(`${API_BASE_URL}/articulos/recientes`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData || !Array.isArray(jsonData)) {
@@ -81,16 +82,16 @@ export async function getLastArticulos(){
     }
 }
 
-export async function getAllCategorias(){
+export async function getAllCategorias() {
     try {
         const response = await fetch(`${API_BASE_URL}/categorias`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         const categoriasData = jsonData.categorias;
@@ -121,19 +122,18 @@ export async function getAllCategorias(){
     }
 }
 
-export async function getArticuloPorId(id){
+export async function getArticuloPorId(id) {
     const url = `${API_BASE_URL}/articulos/${id}`;
     
     try {
-        console.log("id {}",id);
         const response = await fetch(url);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData) {
@@ -173,8 +173,8 @@ export async function saveArticulo(idArticulo, session) {
     console.log('id articulo', idArticulo);
     console.log('role', session.role);
     console.log('token', session.token);
-    
-    if (session.role === 'visitor'){
+
+    if (session.role === 'visitor') {
         alert("Debes registrarse para guardar artículos");
         return;
     }
@@ -207,7 +207,7 @@ export async function saveArticulo(idArticulo, session) {
 
         const data = await response.json();
         console.log('Artículo guardado exitosamente:', data);
-        alert("Artículo guardado exitosamente");
+        alert(data.message);
         return data;
 
     } catch (error) {

@@ -12,7 +12,6 @@ import { useCallback } from "react";
 export default function EscanearQR() {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  const { session } = useAuth();
 
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -78,18 +77,8 @@ export default function EscanearQR() {
 
       const articulo = await res.json();
 
-      // Validar socio
-      if (articulo.para_socios === 1 && session.role !== "partner") {
-        Alert.alert(
-          "Contenido exclusivo",
-          "Este artículo es solo para socios.\nHacete miembro para acceder."
-        );
-        navigation.goBack();
-        return;
-      }
-
       // Redirigir
-      navigation.navigate("ArticuloProvisorio", { idArticulo: articulo.id });
+      navigation.navigate("Articulo", { id: articulo.id });
     } catch (err) {
       console.log(err);
       Alert.alert("Error", "No se pudo validar el artículo.");

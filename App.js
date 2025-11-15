@@ -23,6 +23,8 @@ import EscanearQR from "./assets/src/screens/EscanearQR";
 import Perfil from "./assets/src/screens/Perfil";
 import GaleriaAutor from "./assets/src/screens/GaleriaAutor";
 import Notificaciones from "./assets/src/screens/Notificaciones";
+import Articulo from "./assets/src/screens/Articulo";
+import VistaDeImagen from "./assets/src/screens/VistaDeImagen";
 
 import {
   galeriaIcons,
@@ -141,13 +143,24 @@ function AppNavigator({ session, setSession }) {
                 headerStyle: { backgroundColor: theme.cardBackground },
               }}
             />
-            {/* PROVISORIO POR AHORA, PARA HACER LO DE ESCANEAR QR, NECESITO UNA PANTALLA DE ARTÍCULO DE PRUEBA */}
             <Stack.Screen
-              name="ArticuloAutorProvisorio"
-              component={require("./assets/src/screens/ArticuloAutorProvisorio").default}
+              name="Articulo"
+              component={Articulo}
               options={{
                 headerShown: true,
-                title: "Artículo"
+                title: "Artículo",
+                headerTitleStyle: { color: theme.text.primary, fontFamily: theme.fonts.bold },
+                headerStyle: { backgroundColor: theme.cardBackground },
+              }}
+            />
+            <Stack.Screen
+              name="VistaDeImagen"
+              component={VistaDeImagen}
+              options={{
+                headerShown: true,
+                title: "Imagen",
+                headerTitleStyle: { color: theme.text.primary, fontFamily: theme.fonts.bold },
+                headerStyle: { backgroundColor: theme.cardBackground },
               }}
             />
           </Stack.Group>

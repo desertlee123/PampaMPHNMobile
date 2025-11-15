@@ -1,17 +1,18 @@
+// assets/src/screens/VistaDeImagen.js
 import { View, Text, Image, Dimensions, Animated as RNAnimated } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";
 import Header from "../components/Header";
-import {Gesture, GestureDetector, GestureHandlerRootView} from "react-native-gesture-handler"
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler"
 import { useState, useRef } from "react";
 
-export default function VistaDeImagen(){
+export default function VistaDeImagen() {
 
     const route = useRoute();
     const navigation = useNavigation();
     const theme = useTheme();
     const width = Dimensions.get("window").width;
-    
+
     const [scale, setScale] = useState(1);
     const lastScaleRef = useRef(1);
 
@@ -36,18 +37,17 @@ export default function VistaDeImagen(){
             lastScaleRef.current = finalScale;
         });
 
-    const {imageUrl} = route.params;
+    const { imageUrl } = route.params;
 
-    return(
-        <View style={{flex: 1}}>
-            <Header navigation={navigation} theme={theme}/>
-            <View style={{width: "100%", height: "100%", flex: 1, justifyContent: 'center', alignContent: 'center'}}>
+    return (
+        <View style={{ flex: 1, backgroundColor: theme.cardBackground /* Fondo negro para la vista de imagen */ }}>
+            <View style={{ width: "100%", height: "100%", flex: 1, justifyContent: 'center', alignContent: 'center' }}>
                 <GestureDetector gesture={zoomGesture}>
-                    <Image 
-                        source={{uri: imageUrl}} 
+                    <Image
+                        source={{ uri: imageUrl }}
                         style={{
-                            width: width, 
-                            height: width, 
+                            width: width,
+                            height: width,
                             resizeMode: 'contain',
                             transform: [{ scale: scale }]
                         }}
