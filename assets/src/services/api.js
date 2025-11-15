@@ -124,7 +124,7 @@ export async function getAllCategorias() {
 
 export async function getArticuloPorId(id) {
     const url = `${API_BASE_URL}/articulos/${id}`;
-    
+
     try {
         const response = await fetch(url);
 
@@ -169,7 +169,7 @@ export async function getArticuloPorId(id) {
     }
 }
 
-export async function saveArticulo(idArticulo, session) {
+/* export async function saveArticulo(idArticulo, session) {
     console.log('id articulo', idArticulo);
     console.log('role', session.role);
     console.log('token', session.token);
@@ -214,5 +214,88 @@ export async function saveArticulo(idArticulo, session) {
         console.error('Error al guardar artículo:', error);
         alert(`Error: ${error.message}`);
         return null;
+    }
+} */
+
+// services/api.js - Modificar saveArticulo
+export async function saveArticulo(idArticulo, session) {
+    console.log('id articulo', idArticulo);
+    console.log('role', session.role);
+    console.log('token', session.token);
+
+    if (session.role === 'visitor') {
+        alert("Debes registrarse para guardar artículos");
+        return null;
+    }
+
+    if (!session.token) {
+        alert("Token no disponible. Por favor, vuelve a iniciar sesión.");
+        console.error('Token no disponible:', session);
+        return null;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/articulos/guardar`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.token}`,
+            },
+            body: JSON.stringify({
+                id_articulo: idArticulo,
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error response:', response.status, errorData);
+            alert(`No se pudo guardar el artículo: ${response.status} ${errorData.message || ''}`);
+            return null;
+        }
+
+        const data = await response.json();
+        console.log('Operación exitosa:', data);
+
+        // Devolver el estado de guardado
+        return {
+            message: data.message,
+            guardado: data.guardado // true si se guardó, false si se eliminó
+        };
+
+    } catch (error) {
+        console.error('Error al guardar artículo:', error);
+        alert(`Error: ${error.message}`);
+        return null;
+    }
+}
+
+// services/api.js - Agregar esta función
+export async function checkIfArticleSaved(articleId, session) {
+    if (!session?.token || session.token === "VISITOR_MODE") {
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/articulos/guardados`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session.token}`
+            }
+        });
+
+        if (!response.ok) {
+            return false;
+        }
+
+        const data = await response.json();
+        // Verificar si el artículo está en la lista de guardados
+        return data.articulos?.some(articulo => articulo.id === articleId) || false;
+
+    } catch (error) {
+        console.error('Error al verificar artículo guardado:', error);
+        return false;
     }
 }

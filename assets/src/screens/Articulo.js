@@ -4,7 +4,7 @@ import { useTheme } from "../theme/ThemeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { saveIcon, shareIcon } from "../../Icons";
 import { useState, useEffect } from "react";
-import { getArticuloPorId, saveArticulo } from "../services/api";
+import { getArticuloPorId, saveArticulo, checkIfArticleSaved } from "../services/api";
 import { useAuth } from "../services/AuthContext";
 import Info from "../components/Info";
 import Tabla from "../components/tabla/Tabla"
@@ -20,7 +20,7 @@ export default function Articulo() {
     const { id } = route.params;
 
     const { session, setSession } = useAuth();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // ← CAMBIAR A true
     const [articulo, setArticulo] = useState({
         autor: "Sin autor",
         titulo: "Sin titulo",
@@ -31,19 +31,73 @@ export default function Articulo() {
         metadatos: null,
         para_socios: false,
     });
+    const [isSaved, setIsSaved] = useState(false);
+    const [saving, setSaving] = useState(false);
 
+    // Cargar artículo y verificar si está guardado
     useEffect(() => {
-        getArticuloPorId(id)
-            .then(data => {
-                setArticulo(data);
-                setLoading(true);
-            })
-            .catch((error) => {
-                console.log("Error al cargar los artículos: ", error);
-            });
-    }, []);
+        const loadArticleData = async () => {
+            try {
+                setLoading(true); // ← YA ESTÁ EN true, PERO POR SI ACASO
 
-    if (!loading) {
+                // Cargar datos del artículo
+                const articleData = await getArticuloPorId(id);
+                setArticulo(articleData);
+
+                // Verificar si está guardado
+                if (session?.token && session.token !== "VISITOR_MODE") {
+                    const saved = await checkIfArticleSaved(id, session);
+                    setIsSaved(saved);
+                }
+
+            } catch (error) {
+                console.log("Error al cargar los artículos: ", error);
+            } finally {
+                setLoading(false); // ← AQUÍ SIEMPRE SE DEBE PONER EN false
+            }
+        };
+
+        loadArticleData();
+    }, [id, session]);
+
+    // Función para guardar/desguardar artículo
+    const handleSaveArticle = async () => {
+        if (session?.role === 'visitor') {
+            alert("Debes registrarte para guardar artículos");
+            return;
+        }
+
+        if (!session?.token || session.token === "VISITOR_MODE") {
+            alert("Debes iniciar sesión para guardar artículos");
+            return;
+        }
+
+        try {
+            setSaving(true);
+
+            const result = await saveArticulo(articulo.id, session);
+
+            if (result) {
+                // Cambiar el estado basado en la respuesta del servidor
+                setIsSaved(result.guardado);
+
+                // Mostrar mensaje de feedback
+                if (result.guardado) {
+                    // Podrías mostrar un toast o feedback visual aquí
+                    console.log("Artículo guardado");
+                } else {
+                    console.log("Artículo eliminado de guardados");
+                }
+            }
+
+        } catch (error) {
+            console.error("Error al guardar artículo:", error);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) { // ← ESTE loading DEBE SER true MIENTRAS CARGA
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <ActivityIndicator size="large" color="#FFA500" />
@@ -52,7 +106,6 @@ export default function Articulo() {
     }
 
     if (session.role != 'partner' && articulo.para_socios) {
-
         console.log('role: ', session.role);
 
         switch (session.role) {
@@ -75,27 +128,40 @@ export default function Articulo() {
                     </View>
                 );
         }
-
     }
 
     return (
         <>
             <ScrollView>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 10 }}>
-                    {/* Mantener solo los iconos de compartir y guardar como parte del contenido */}
+                    {/* Botón compartir */}
                     <Pressable style={{ marginRight: 20 }}>
                         {shareIcon({ color: theme.text.primary })}
                     </Pressable>
-                    <Pressable onPress={() => saveArticulo(articulo.id, session)}>
-                        {saveIcon({ color: theme.text.primary })}
+
+                    {/* Botón guardar con estado visual */}
+                    <Pressable
+                        onPress={handleSaveArticle}
+                        disabled={saving}
+                        style={{
+                            opacity: saving ? 0.6 : 1
+                        }}
+                    >
+                        {saveIcon({
+                            color: isSaved ? theme.primary : theme.text.primary,
+                            fill: isSaved ? theme.primary : 'none'
+                        })}
                     </Pressable>
                 </View>
+
                 <Info autor={articulo.autor} titulo={articulo.titulo} descripcion={articulo.descirpcion} theme={theme} />
+
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <Pressable onPress={() => navigation.navigate("VistaDeImagen", { imageUrl: articulo.imageUrl })}>
                         <Image source={{ uri: articulo.imageUrl }} style={{ width: width - 28, height: width - 28, borderRadius: 16, resizeMode: 'contain' }} />
                     </Pressable>
                 </View>
+
                 {(articulo.metadatos) ?
                     <Tabla>
                         <Fila titulo="Autor" valor={articulo.metadatos.autor} theme={theme} />
