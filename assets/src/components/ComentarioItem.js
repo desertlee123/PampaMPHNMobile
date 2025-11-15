@@ -37,11 +37,11 @@ export default function ComentarioItem({ comentario, theme }) {
                     flexDirection: "row",
                     alignItems: "flex-start",
                     gap: 12,
-                    backgroundColor: "#FFF4E6",
+                    backgroundColor: theme.highlightBackground,
                     borderRadius: 12,
                     padding: 12,
                     borderWidth: 1,
-                    borderColor: "#FFE4B5",
+                    borderColor: theme.border,
                 }}
             >
                 {/* Avatar circular con inicial */}
@@ -57,7 +57,7 @@ export default function ComentarioItem({ comentario, theme }) {
                 >
                     <Text
                         style={{
-                            color: theme.text.inverse,
+                            color: theme.text.primary,
                             fontSize: 18,
                             fontWeight: "bold",
                             fontFamily: theme.fonts.bold,

@@ -1,15 +1,12 @@
+// assets/src/screens/GaleriaAutor.js
 import { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import { API_BASE_URL } from "../services/api";
-import { lightTheme } from "../theme/colors";
 import {
   View,
   Text,
   ActivityIndicator,
-  FlatList,
-  Pressable,
-  Image
+  FlatList
 } from "react-native";
 import Box from "../components/Box";
 import GaleriaHeader from "../components/buscar/GaleriaHeader";
@@ -47,20 +44,11 @@ export default function GaleriaAutor() {
         const artRes = await fetch(`${API_BASE_URL}/articulos/galeria/${id}`);
         const artData = await artRes.json();
 
-        const esSocio = session?.role === "partner";
-        const filtrados = Array.isArray(artData)
-          ? artData
-            .filter(a => esSocio || a.para_socios === 0)
-            .map(a => ({ ...a, imagen: normalizeImage(a.imagen) }))
-          : [];
-
         setArticulos(
           Array.isArray(artData)
             ? artData.map((a) => ({ ...a, imagen: normalizeImage(a.imagen) }))
             : []
         );
-
-        setArticulos(filtrados);
       } catch (err) {
         console.error("Error cargando galería:", err);
       } finally {
@@ -104,13 +92,13 @@ export default function GaleriaAutor() {
             imageUrl={item.imagen}
             paraSocios={item.para_socios}
             esSocio={session?.role === "partner"}
+            onPress={() => navigation.getParent().navigate("Articulo", { id: item.id })}
             // acá aplicamos el estilo para que tome la mitad del ancho y el margen
             style={{
               flex: 1,
               margin: 6,
               width: 'auto'
             }}
-          // Nota: Si los artículos tuvieran su propia ruta de navegación, se pasaría aquí.
           />
         )}
       />

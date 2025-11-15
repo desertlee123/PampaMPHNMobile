@@ -105,36 +105,7 @@ export default function Comentarios(){
     const renderComentario = ({ item }) => <ComentarioItem comentario={item} theme={theme} />;
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-            {/* Encabezado con flecha de retroceso */}
-            <View 
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    padding: 16,
-                    backgroundColor: theme.cardBackground,
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme.border,
-                    justifyContent: "center",
-                    position: "relative",
-                }}
-            >
-                <Pressable 
-                    onPress={() => navigation.goBack()}
-                    style={{ position: "absolute", left: 16 }}
-                >
-                    <Ionicons name="arrow-back" size={24} color={theme.primary} />
-                </Pressable>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        fontFamily: theme.fonts.bold,
-                        color: theme.text.primary,
-                    }}
-                >
-                    Comentarios
-                </Text>
-            </View>
+        <View style={{ flex: 1, backgroundColor: theme.background }}>
 
             {/* Lista de comentarios */}
             {loading ? (

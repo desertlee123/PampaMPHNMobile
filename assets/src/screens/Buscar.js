@@ -1,3 +1,4 @@
+// assets/src/screens/Buscar.js
 import { useState } from "react";
 import {
   View,
@@ -113,11 +114,6 @@ export default function Buscar() {
         }
       });
       let normalizedArticulos = Array.from(articlesMap.values());
-
-      const esSocio = session?.role === "partner";
-      if (!esSocio) {
-        normalizedArticulos = normalizedArticulos.filter(articulo => articulo.para_socios === 0)
-      }
 
       // --- GALERÍAS ---
       // Para galerías hacemos sólo titulo y autor (categoria no aplica)
@@ -348,6 +344,7 @@ export default function Buscar() {
                     imageUrl={item.imagen}
                     paraSocios={item.para_socios}
                     esSocio={session?.role === "partner"}
+                    onPress={() => navigation.getParent().navigate("Articulo", { id: item.id })}
                   />
                 )}
                 keyExtractor={(item) => `art-${item.id}`}

@@ -1,16 +1,17 @@
+// assets/src/services/api.js
 export const API_BASE_URL = "http://192.168.0.106:8000/api";
 export const IMAGE_BASE_URL = "http://192.168.0.106:8000/img";
 
-export async function getAllArticulos(){
+export async function getAllArticulos() {
     try {
         const response = await fetch(`${API_BASE_URL}/articulos`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData || !Array.isArray(jsonData)) {
@@ -41,16 +42,16 @@ export async function getAllArticulos(){
     }
 }
 
-export async function getLastArticulos(){
+export async function getLastArticulos() {
     try {
         const response = await fetch(`${API_BASE_URL}/articulos/recientes`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData || !Array.isArray(jsonData)) {
@@ -81,16 +82,16 @@ export async function getLastArticulos(){
     }
 }
 
-export async function getAllCategorias(){
+export async function getAllCategorias() {
     try {
         const response = await fetch(`${API_BASE_URL}/categorias`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         const categoriasData = jsonData.categorias;
@@ -121,19 +122,18 @@ export async function getAllCategorias(){
     }
 }
 
-export async function getArticuloPorId(id){
+export async function getArticuloPorId(id) {
     const url = `${API_BASE_URL}/articulos/${id}`;
-    
+
     try {
-        console.log("id {}",id);
         const response = await fetch(url);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         // await new Promise(resolve => setTimeout(resolve, 7000));
-        
+
         const jsonData = await response.json();
 
         if (!jsonData) {
@@ -172,7 +172,7 @@ export async function getArticuloPorId(id){
 export async function saveArticulo(idArticulo, session) {
     
     if (session.role === 'visitor'){
-        // alert("Debes registrarse para guardar artículos");
+        alert("Debes registrarse para guardar artículos");
         return;
     }
 
@@ -211,6 +211,36 @@ export async function saveArticulo(idArticulo, session) {
         console.error('Error al guardar artículo:', error);
         alert(`Error: ${error.message}`);
         return null;
+    }
+}
+
+// services/api.js - Agregar esta función
+export async function checkIfArticleSaved(articleId, session) {
+    if (!session?.token || session.token === "VISITOR_MODE") {
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/articulos/guardados`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session.token}`
+            }
+        });
+
+        if (!response.ok) {
+            return false;
+        }
+
+        const data = await response.json();
+        // Verificar si el artículo está en la lista de guardados
+        return data.articulos?.some(articulo => articulo.id === articleId) || false;
+
+    } catch (error) {
+        console.error('Error al verificar artículo guardado:', error);
+        return false;
     }
 }
 
