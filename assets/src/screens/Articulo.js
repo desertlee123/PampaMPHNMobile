@@ -1,5 +1,5 @@
 // assets/src/screens/Articulo.js
-import { View, Pressable, ScrollView, Text, Image, Dimensions, ActivityIndicator } from "react-native";
+import { View, Pressable, ScrollView, Text, Image, Dimensions, ActivityIndicator, Share } from "react-native";
 import { useTheme } from "../theme/ThemeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { saveIcon, shareIcon } from "../../Icons";
@@ -20,7 +20,7 @@ export default function Articulo() {
     const { id } = route.params;
 
     const { session, setSession } = useAuth();
-    const [loading, setLoading] = useState(true); // ← CAMBIAR A true
+    const [loading, setLoading] = useState(true);
     const [articulo, setArticulo] = useState({
         autor: "Sin autor",
         titulo: "Sin titulo",
@@ -38,7 +38,7 @@ export default function Articulo() {
     useEffect(() => {
         const loadArticleData = async () => {
             try {
-                setLoading(true); // ← YA ESTÁ EN true, PERO POR SI ACASO
+                setLoading(true);
 
                 // Cargar datos del artículo
                 const articleData = await getArticuloPorId(id);
@@ -53,7 +53,7 @@ export default function Articulo() {
             } catch (error) {
                 console.log("Error al cargar los artículos: ", error);
             } finally {
-                setLoading(false); // ← AQUÍ SIEMPRE SE DEBE PONER EN false
+                setLoading(false);
             }
         };
 
@@ -97,7 +97,38 @@ export default function Articulo() {
         }
     };
 
-    if (loading) { // ← ESTE loading DEBE SER true MIENTRAS CARGA
+    // Función para compartir el artículo
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                // El 'message' se usa en Android y como fallback en iOS
+                message: `Mira este artículo: ${articulo.titulo}\n${articulo.imageUrl}`,
+
+                // El 'url' es el contenido principal en iOS (si es una URL)
+                url: articulo.imageUrl,
+
+                // El 'title' se usa para el diálogo en Android
+                title: articulo.titulo,
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // Compartido con un tipo de actividad específico (iOS)
+                    console.log(`Compartido vía: ${result.activityType}`);
+                } else {
+                    // Compartido exitosamente (Android/iOS)
+                    console.log("Compartido exitosamente");
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // El diálogo de compartir fue cerrado (Android/iOS)
+                console.log("Diálogo de compartir cerrado");
+            }
+        } catch (error) {
+            console.error("Error al compartir:", error.message);
+        }
+    }
+
+    if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <ActivityIndicator size="large" color="#FFA500" />
@@ -135,7 +166,10 @@ export default function Articulo() {
             <ScrollView>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 10 }}>
                     {/* Botón compartir */}
-                    <Pressable style={{ marginRight: 20 }}>
+                    <Pressable
+                        style={{ marginRight: 20 }}
+                        onPress={handleShare}
+                    >
                         {shareIcon({ color: theme.text.primary })}
                     </Pressable>
 
