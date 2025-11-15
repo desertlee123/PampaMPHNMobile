@@ -2,9 +2,9 @@ import { View, Pressable, ScrollView, Text, Image, Dimensions, ActivityIndicator
 import Header from "../components/Header";
 import { useTheme } from "../theme/ThemeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { saveIcon, shareIcon, messageIcon } from "../../Icons";
+import { saveIcon, shareIcon, messageIcon, saveAddedIcon } from "../../Icons";
 import { useState, useEffect } from "react";
-import { getArticuloPorId, saveArticulo } from "../services/api";
+import { getArticuloPorId, saveArticulo, isSaveArticulo } from "../services/api";
 import { useAuth } from "../services/AuthContext";
 import Info from "../components/Info";
 import Tabla from "../components/tabla/Tabla"
@@ -22,6 +22,7 @@ export default function Articulo() {
 
     const { session, setSession } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [guadado, setGuardado] = useState(false);
     const [articulo, setArticulo] = useState({
         autor: "Sin autor",
         titulo: "Sin titulo",
@@ -39,6 +40,16 @@ export default function Articulo() {
             setArticulo(data);
             setLoading(true);
         })
+        .catch((error) => {
+        console.log("Error al cargar los artículos: ", error);
+        });
+    }, []);
+
+    useEffect(() => {
+        isSaveArticulo(id, session)
+        .then(res =>
+            setGuardado(res)
+        )
         .catch((error) => {
         console.log("Error al cargar los artículos: ", error);
         });
@@ -86,8 +97,8 @@ export default function Articulo() {
                     <Pressable>
                         {shareIcon({color: theme.text.primary})}
                     </Pressable>
-                    <Pressable onPress={() => saveArticulo(articulo.id, session)}>
-                        {saveIcon({color: theme.text.primary})}
+                    <Pressable onPress={() => {saveArticulo(articulo.id, session); setGuardado(!guadado)}}>
+                        {(guadado)?saveAddedIcon({color: theme.primary}):saveIcon({color: theme.text.primary})}
                     </Pressable>
                 </Header>
                 <Info autor={articulo.autor} titulo={articulo.titulo} descripcion={articulo.descirpcion} theme={theme}/>

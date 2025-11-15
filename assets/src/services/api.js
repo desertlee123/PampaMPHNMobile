@@ -170,12 +170,9 @@ export async function getArticuloPorId(id){
 }
 
 export async function saveArticulo(idArticulo, session) {
-    console.log('id articulo', idArticulo);
-    console.log('role', session.role);
-    console.log('token', session.token);
     
     if (session.role === 'visitor'){
-        alert("Debes registrarse para guardar artículos");
+        // alert("Debes registrarse para guardar artículos");
         return;
     }
 
@@ -207,11 +204,145 @@ export async function saveArticulo(idArticulo, session) {
 
         const data = await response.json();
         console.log('Artículo guardado exitosamente:', data);
-        alert("Artículo guardado exitosamente");
+        // alert("Artículo guardado exitosamente");
         return data;
 
     } catch (error) {
         console.error('Error al guardar artículo:', error);
+        alert(`Error: ${error.message}`);
+        return null;
+    }
+}
+
+export async function isSaveArticulo(idArticulo, session) {
+    
+    if (session.role === 'visitor'){
+        return false;
+    }
+
+    if (!session.token) {
+        // alert("Token no disponible. Por favor, vuelve a iniciar sesión.");
+        console.error('Token no disponible:', session);
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/articulos/guardados`, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.token}`,
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error response:', response.status, errorData);
+            return false;
+        }
+
+        const data = await response.json();
+        const { articulos } = data;
+        console.log('Artículo cargados exitosamente:', data);
+
+        for(let i = 0; i < articulos.length; i++){
+            if(articulos[i].id == idArticulo){
+                return true;
+            }
+        }
+
+        return false;
+
+    } catch (error) {
+        console.error('Error al guardar artículo:', error);
+        return false;
+    }
+}
+
+export async function getComentarios(idArticulo) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/comentarios/${idArticulo}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const jsonData = await response.json();
+
+        if (!jsonData || !Array.isArray(jsonData)) {
+            throw new Error('Estructura de respuesta inválida: esperaba jsonData como array');
+        }
+
+        return jsonData.map((item) => {
+            const {
+                id,
+                mensaje,
+                usuario_id,
+                articulo_id,
+                usuario,
+                created_at,
+            } = item;
+
+            return {
+                id,
+                mensaje,
+                usuario_id,
+                articulo_id,
+                usuario: usuario || { nombre: 'Usuario', id: usuario_id },
+                created_at,
+            };
+        });
+    } catch (error) {
+        console.error('Error al obtener comentarios:', error);
+        throw error;
+    }
+}
+
+export async function crearComentario(mensaje, id_articulo, usuario_id, session) {
+    if (!session.token) {
+        alert("Token no disponible. Por favor, vuelve a iniciar sesión.");
+        console.error('Token no disponible:', session);
+        return null;
+    }
+
+    if (!mensaje || mensaje.trim().length === 0) {
+        alert("El comentario no puede estar vacío");
+        return null;
+    }
+
+    if (mensaje.length > 250) {
+        alert("El comentario no puede exceder 250 caracteres");
+        return null;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/usuarios/comentar`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.token}`,
+            },
+            body: JSON.stringify({
+                mensaje,
+                articulos_id: id_articulo,
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error response:', response.status, errorData);
+            alert(`No se pudo crear el comentario: ${response.status} ${errorData.message || ''}`);
+            return null;
+        }
+
+        const data = await response.json();
+        console.log('Comentario creado exitosamente:', data);
+        return data;
+
+    } catch (error) {
+        console.error('Error al crear comentario:', error);
         alert(`Error: ${error.message}`);
         return null;
     }
