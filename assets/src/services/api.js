@@ -1,6 +1,6 @@
 // assets/src/services/api.js
-export const API_BASE_URL = "http://192.168.0.103:8000/api";
-export const IMAGE_BASE_URL = "http://192.168.0.103:8000/img";
+export const API_BASE_URL = "http://192.168.0.106:8000/api";
+export const IMAGE_BASE_URL = "http://192.168.0.106:8000/img";
 
 export async function getAllArticulos() {
     try {
@@ -170,8 +170,8 @@ export async function getArticuloPorId(id) {
 }
 
 export async function saveArticulo(idArticulo, session) {
-    
-    if (session.role === 'visitor'){
+
+    if (session.role === 'visitor') {
         alert("Debes registrarse para guardar artículos");
         return;
     }
@@ -245,8 +245,8 @@ export async function checkIfArticleSaved(articleId, session) {
 }
 
 export async function isSaveArticulo(idArticulo, session) {
-    
-    if (session.role === 'visitor'){
+
+    if (session.role === 'visitor') {
         return false;
     }
 
@@ -276,8 +276,8 @@ export async function isSaveArticulo(idArticulo, session) {
         const { articulos } = data;
         console.log('Artículo cargados exitosamente:', data);
 
-        for(let i = 0; i < articulos.length; i++){
-            if(articulos[i].id == idArticulo){
+        for (let i = 0; i < articulos.length; i++) {
+            if (articulos[i].id == idArticulo) {
                 return true;
             }
         }
@@ -293,33 +293,52 @@ export async function isSaveArticulo(idArticulo, session) {
 export async function getComentarios(idArticulo) {
     try {
         const response = await fetch(`${API_BASE_URL}/comentarios/${idArticulo}`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const jsonData = await response.json();
 
         if (!jsonData || !Array.isArray(jsonData)) {
             throw new Error('Estructura de respuesta inválida: esperaba jsonData como array');
         }
 
+        // Obtener todos los IDs de usuario
+        const usuarioIds = [...new Set(jsonData.map(item => item.usuarios_id))];
+
+        // Crear una lista de promesas para cargar la información de cada usuario
+        const usuarioPromises = usuarioIds.map(id => getUsuarioPorId(id));
+
+        // Esperar a que se resuelvan todas las promesas de usuario
+        const usuariosData = await Promise.all(usuarioPromises);
+
+        // Mapear los datos de usuario por ID para una búsqueda rápida
+        const usuariosMap = usuariosData.reduce((acc, user) => {
+            acc[user.id] = user;
+            return acc;
+        }, {});
+
+        // Mapear los comentarios e inyectar el objeto de usuario completo
         return jsonData.map((item) => {
             const {
                 id,
                 mensaje,
-                usuario_id,
+                usuarios_id,
                 articulo_id,
-                usuario,
                 created_at,
             } = item;
+
+            // Buscar el usuario ya cargado por su ID
+            const usuario = usuariosMap[usuarios_id];
 
             return {
                 id,
                 mensaje,
-                usuario_id,
+                usuario_id: usuarios_id,
                 articulo_id,
-                usuario: usuario || { nombre: 'Usuario', id: usuario_id },
+                // Usar el objeto de usuario real, o un valor por defecto si no se encontró
+                usuario: usuario || { nombre: 'Usuario', id: usuarios_id },
                 created_at,
             };
         });
@@ -375,5 +394,34 @@ export async function crearComentario(mensaje, id_articulo, usuario_id, session)
         console.error('Error al crear comentario:', error);
         alert(`Error: ${error.message}`);
         return null;
+    }
+}
+
+export async function getUsuarioPorId(id) {
+    const url = `${API_BASE_URL}/usuarios/${id}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        if (!jsonData || !jsonData.name) {
+            throw new Error('Estructura de respuesta de usuario inválida: falta el campo name');
+        }
+
+        // Retorna solo la información relevante del usuario (id y nombre)
+        return {
+            id: jsonData.id,
+            nombre: jsonData.name,
+            role: jsonData.role,
+        };
+    } catch (error) {
+        // En caso de error, retorna un usuario por defecto
+        console.error(`Error al obtener usuario ${id}:`, error);
+        return { id, nombre: 'Usuario' };
     }
 }
