@@ -10,7 +10,7 @@ export default function MessageButton({navigation, theme, id}){
                 position: 'absolute',
                 padding: 16,
                 right: 14,
-                bottom: 14,
+                bottom: 50,
             }}
             onPress={()=> {navigation.navigate("Comentarios", {id: id})}}
             >

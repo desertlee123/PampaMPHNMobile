@@ -123,7 +123,7 @@ export default function Articulo() {
 
     return (
         <>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 10 }}>
                     {/* Botón compartir */}
                     <Pressable

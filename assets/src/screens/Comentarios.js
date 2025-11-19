@@ -1,9 +1,9 @@
-import { 
-    View, 
-    Text, 
-    TextInput, 
-    FlatList, 
-    Pressable, 
+import {
+    View,
+    Text,
+    TextInput,
+    FlatList,
+    Pressable,
     ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
@@ -19,7 +19,7 @@ import { getComentarios, crearComentario } from "../services/api";
 import ComentarioItem from "../components/ComentarioItem";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function Comentarios(){
+export default function Comentarios() {
     const navigation = useNavigation();
     const route = useRoute();
     const { theme } = useTheme();
@@ -89,7 +89,7 @@ export default function Comentarios(){
         try {
             setEnviando(true);
             const nuevoComentario = await crearComentario(text, id, session.id, session);
-            
+
             if (nuevoComentario) {
                 setText('');
                 await cargarComentarios();
@@ -130,8 +130,8 @@ export default function Comentarios(){
             )}
 
             {/* KeyboardAvoidingView para el input - solo contiene el área de escritura */}
-            <KeyboardAvoidingView 
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
                 keyboardVerticalOffset={0}
             >
                 <View
@@ -140,7 +140,9 @@ export default function Comentarios(){
                         borderTopColor: theme.border,
                         backgroundColor: theme.cardBackground,
                         padding: 12,
+                        paddingBottom: Platform.OS === "android" ? 20 : 0,
                         flexDirection: "row",
+                        paddingBottom: 50,
                         alignItems: "flex-end",
                         gap: 12,
                     }}
