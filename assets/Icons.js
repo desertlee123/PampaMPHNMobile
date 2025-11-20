@@ -17,3 +17,7 @@ export const saveIcon = ({ color }) => <MaterialIcons name="bookmark-border" siz
 export const saveAddedIcon = ({ color }) => <MaterialIcons name="bookmark-added" size={ICON_SIZE} color={color} />;
 export const closeIcon = ({ color }) => <MaterialIcons name="close" size={ICON_SIZE} color={color} />;
 export const messageIcon = ({ color }) => <MaterialIcons name="message" size={ICON_SIZE} color={color} />;
+
+// Iconos para Notificaciones
+export const deleteOutlineIcon = ({ color, size = ICON_SIZE }) => <MaterialIcons name="delete-outline" size={size} color={color} />;
+export const notificationsNoneIcon = ({ color, size = ICON_SIZE }) => <MaterialIcons name="notifications-none" size={size} color={color} />;

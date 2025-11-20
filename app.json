@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.PampaMPHN"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +22,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": false,
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.PampaMPHN"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,8 +41,13 @@
           }
         }
       ],
-      "expo-barcode-scanner",
+      "expo-camera",
       "expo-video"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0e12f7fd-b6a3-4648-960b-a5f820c9ed77"
+      }
+    }
   }
 }

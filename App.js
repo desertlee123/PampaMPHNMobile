@@ -12,6 +12,8 @@ import { getSession } from "./assets/src/services/storage";
 import { validateSession } from "./assets/src/services/authService";
 import { ThemeProvider, useTheme } from "./assets/src/theme/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { startGeofencingAsync } from "./assets/src/services/geofencing";
+import { startNotifications } from "./assets/src/services/notificationService";
 
 import Login from "./assets/src/screens/Login";
 import Signin from "./assets/src/screens/Signin";
@@ -201,6 +203,8 @@ export default function App() {
           if (valid) setSession(valid);
         }
       } finally {
+        startGeofencingAsync();
+        startNotifications();
         setLoading(false);
       }
     };

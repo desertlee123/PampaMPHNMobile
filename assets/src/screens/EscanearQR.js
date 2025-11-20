@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ActivityIndicator, Alert, Pressable, Linking } 
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";
-import { API_BASE_URL } from "../services/api";
+import { API_BASE_URL } from "../services/Api";
 import { useAuth } from "../services/AuthContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";

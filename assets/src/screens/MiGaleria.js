@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet, ActivityIndicator, FlatList } from "rea
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useAuth } from "../services/AuthContext"
 import { useEffect, useState } from "react";
-import { API_BASE_URL, IMAGE_BASE_URL } from "../services/api";
+import { API_BASE_URL, IMAGE_BASE_URL } from "../services/Api";
 import { useTheme } from "../theme/ThemeContext";
 import Seccion from "../components/Seccion";
 import Box from "../components/Box";

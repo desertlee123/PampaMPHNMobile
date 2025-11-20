@@ -15,7 +15,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";
 import { useAuth } from "../services/AuthContext";
-import { getComentarios, crearComentario } from "../services/api";
+import { getComentarios, crearComentario } from "../services/Api";
 import ComentarioItem from "../components/ComentarioItem";
 import { Ionicons } from "@expo/vector-icons";
 

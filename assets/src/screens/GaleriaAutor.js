@@ -1,7 +1,7 @@
 // assets/src/screens/GaleriaAutor.js
 import { useEffect, useState } from "react";
 import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
-import { API_BASE_URL } from "../services/api";
+import { API_BASE_URL } from "../services/Api";
 import {
   View,
   Text,

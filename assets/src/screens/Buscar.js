@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Box from "../components/Box";
 import Seccion from "../components/Seccion";
-import { API_BASE_URL } from "../services/api";
+import { API_BASE_URL } from "../services/Api";
 import { lightTheme } from "../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";

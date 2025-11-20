@@ -7,7 +7,7 @@ import Seccion from "../components/Seccion";
 import Carrusel from "../components/carrusel/Carrusel";
 import Box from "../components/Box";
 import { useTheme } from "../theme/ThemeContext";
-import { getAllArticulos, getLastArticulos, getAllCategorias } from "../services/api";
+import { getAllArticulos, getLastArticulos, getAllCategorias } from "../services/Api";
 
 export default function Home() {
   const navigator = useNavigation();

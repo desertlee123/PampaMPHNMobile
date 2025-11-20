@@ -1,7 +1,7 @@
 // assets/src/screens/Shorts.js
 import { useEffect, useState } from "react";
 import ShortsComponent from "../components/shorts/ShortsComponent";
-import { API_BASE_URL } from "../services/api"
+import { API_BASE_URL } from "../services/Api"
 
 export default function Shorts() {
   const [items, setItems] = useState([]);

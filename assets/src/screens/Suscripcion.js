@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { lightTheme } from "../theme/colors";
 import { useAuth } from "../services/AuthContext";
 import { getSession, saveSession } from "../services/storage";
-import { API_BASE_URL } from "../services/api";
+import { API_BASE_URL } from "../services/Api";
 import { useTheme } from "../theme/ThemeContext";
 
 export default function Suscripcion({ navigation }) {

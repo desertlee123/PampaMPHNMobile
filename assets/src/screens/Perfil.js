@@ -12,7 +12,7 @@ import { getSession, saveSession } from "../services/storage";
 import { useAuth } from "../services/AuthContext";
 import { logoutUser } from "../services/authService";
 import { lightTheme } from "../theme/colors";
-import { API_BASE_URL } from "../services/api";
+import { API_BASE_URL } from "../services/Api";
 import { useIsFocused } from "@react-navigation/native";
 import { useTheme } from "../theme/ThemeContext";
 

@@ -4,7 +4,7 @@ import { useTheme } from "../theme/ThemeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { saveIcon, shareIcon, messageIcon, saveAddedIcon } from "../../Icons";
 import { useState, useEffect } from "react";
-import { getArticuloPorId, saveArticulo, isSaveArticulo } from "../services/api";
+import { getArticuloPorId, saveArticulo, isSaveArticulo } from "../services/Api";
 import { useAuth } from "../services/AuthContext";
 import Info from "../components/Info";
 import Tabla from "../components/tabla/Tabla"
