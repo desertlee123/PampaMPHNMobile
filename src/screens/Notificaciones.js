@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Pressable, FlatList, ActivityIndicator, Refresh
 import { useTheme } from "../theme/ThemeContext";
 import { useEffect, useState, useCallback } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { deleteOutlineIcon, notificationsNoneIcon, closeIcon } from "../../Icons";
+import { deleteOutlineIcon, notificationsNoneIcon, closeIcon } from "../../assets/Icons";
 
 export default function Notificaciones() {
   const { theme } = useTheme();

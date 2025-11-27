@@ -1,5 +1,5 @@
 import { Pressable } from "react-native";
-import { messageIcon } from "../../Icons";
+import { messageIcon } from "../../assets/Icons";
 
 export default function MessageButton({navigation, theme, id}){
     return (

@@ -7,27 +7,27 @@ import { ActivityIndicator, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 
-import { AuthProvider } from "./assets/src/services/AuthContext";
-import { getSession } from "./assets/src/services/storage";
-import { validateSession } from "./assets/src/services/authService";
-import { ThemeProvider, useTheme } from "./assets/src/theme/ThemeContext";
+import { AuthProvider } from "./src/services/AuthContext";
+import { getSession } from "./src/services/storage";
+import { validateSession } from "./src/services/authService";
+import { ThemeProvider, useTheme } from "./src/theme/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { startGeofencingAsync } from "./assets/src/services/geofencing";
-import { startNotifications } from "./assets/src/services/notificationService";
+import { startGeofencingAsync } from "./src/services/geofencing";
+import { startNotifications } from "./src/services/notificationService";
 
-import Login from "./assets/src/screens/Login";
-import Signin from "./assets/src/screens/Signin";
-import HomeNavegation from "./assets/src/screens/HomeNavegation";
-import MiGaleria from "./assets/src/screens/MiGaleria";
-import Shorts from "./assets/src/screens/Shorts";
-import Buscar from "./assets/src/screens/Buscar";
-import EscanearQR from "./assets/src/screens/EscanearQR";
-import Perfil from "./assets/src/screens/Perfil";
-import GaleriaAutor from "./assets/src/screens/GaleriaAutor";
-import Notificaciones from "./assets/src/screens/Notificaciones";
-import Articulo from "./assets/src/screens/Articulo";
-import VistaDeImagen from "./assets/src/screens/VistaDeImagen";
-import Comentarios from "./assets/src/screens/Comentarios";
+import Login from "./src/screens/Login";
+import Signin from "./src/screens/Signin";
+import HomeNavegation from "./src/screens/HomeNavegation";
+import MiGaleria from "./src/screens/MiGaleria";
+import Shorts from "./src/screens/Shorts";
+import Buscar from "./src/screens/Buscar";
+import EscanearQR from "./src/screens/EscanearQR";
+import Perfil from "./src/screens/Perfil";
+import GaleriaAutor from "./src/screens/GaleriaAutor";
+import Notificaciones from "./src/screens/Notificaciones";
+import Articulo from "./src/screens/Articulo";
+import VistaDeImagen from "./src/screens/VistaDeImagen";
+import Comentarios from "./src/screens/Comentarios";
 
 import {
   galeriaIcons,
@@ -138,7 +138,7 @@ function AppNavigator({ session, setSession }) {
             />
             <Stack.Screen
               name="Suscripcion"
-              component={require("./assets/src/screens/Suscripcion").default}
+              component={require("./src/screens/Suscripcion").default}
               options={{
                 headerShown: true,
                 title: "Suscripción",

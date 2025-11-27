@@ -2,7 +2,7 @@
 import { View, Pressable, ScrollView, Text, Image, Dimensions, ActivityIndicator, Share } from "react-native";
 import { useTheme } from "../theme/ThemeContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { saveIcon, shareIcon, messageIcon, saveAddedIcon } from "../../Icons";
+import { saveIcon, shareIcon, messageIcon, saveAddedIcon } from "../../assets/Icons";
 import { useState, useEffect } from "react";
 import { getArticuloPorId, saveArticulo, isSaveArticulo } from "../services/Api";
 import { useAuth } from "../services/AuthContext";

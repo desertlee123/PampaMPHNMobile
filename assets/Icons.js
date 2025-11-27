@@ -1,5 +1,5 @@
 // import Icon from 'react-native-vector-icons/MaterialIcons';
-import { lightTheme } from './src/theme/colors';
+import { lightTheme } from '../src/theme/colors';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
